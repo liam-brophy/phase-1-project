@@ -4,3 +4,14 @@
     border: 1px solid black;
     margin: 20px;
 }
+
+#header{
+    margin: 50px;
+    text-align: center;
+}
+
+#footer{
+    margin: 50px;
+    margin-top: 200px;
+    text-align: center;
+}
