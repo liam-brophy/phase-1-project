@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +8,44 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script defer type="module" src="./src/index.js"></script>
 </head>
+
 <body>
     <div id="header">B & L & K Project 1</div>
 
 
     <div id="map-container">
+        <!-- This will be where the map is displayed after it is fetched -->
     </div>
 
+    <div id="side-panel">
+        <!-- This form is inside a div for styling purposes  -->
+        <form id="user-inputs">
+            
+            <!-- This is the Longitude Input -->
+            <label for="long-input">Longitude: </label>
+            <input type="text" name="longitude" id="long-input" />
+            <!-- This is the Latitude Input -->
+            <label for="lat-input">Latitude: </label>
+            <input type="text" name="latitude" id="lat-input" />
 
-    <div id="user-inputs"></div>
+            <!-- This is the Date Input -->
+            <label for="date-input">Date: </label>
+            <input type="date" name="date" id="date-input" />
+        </form>
+    </div>
+
+    <div>
+    <!-- This is the search -->
     <label for="search-bar">Search: </label>
     <input type="text" name="search" id="search-bar" />
-
-    <label for="long-input">Longitude: </label>
-    <input type="text" name="longitude" id="long-input" />
-
-    <label for="lat-input">Latitude: </label>
-    <input type="text" name="latitude" id="lat-input" />
-
-    <label for="date-input">Date: </label>
-    <input type="date" name="date" id="date-input" />
     </div>
-    
+    <div id="info-container">
+        <!-- This is where relevant facts and other info from the API will appear! -->
+    </div>
 
     <div id="footer">Thank you Matteo</div>
 
 
 </body>
+
 </html>
