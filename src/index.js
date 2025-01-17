@@ -8,6 +8,10 @@ async function fetchData() {
     console.log(data);
 }
 
+//add modal search results
+//add images to search results
+
+
 //! GLOBAL VARIABLES
 
 const searchBar = document.getElementById("search-bar");
