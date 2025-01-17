@@ -1,11 +1,12 @@
 #map-container{
-    width: 500px;
+    width: 80%;
     height: 500px;
     border: 1px solid black;
     margin: 20px;
+    display: flex;
 }
 
-#info-container{
+#favorites-container{
     width: 80%;
     height: 200px;
     border: 1px solid black;
