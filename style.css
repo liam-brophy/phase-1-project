@@ -5,6 +5,10 @@
     margin: 20px;
     display: flex;
 }
+#artwork-text{
+    text-align: left;
+    z-index: 1;
+}
 
 #favorites-container{
     width: 80%;
