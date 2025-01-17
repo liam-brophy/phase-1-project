@@ -56,17 +56,16 @@ async function fetchFilteredRandomArtwork() {
       throw new Error("No artworks found for the selected period");
     }
 
-    // Selects a random artwork from the returned array
+    // selects a random artwork from the returned array
     const randomArtwork =
       filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
 
-
-    // Displays the random artwork details
+    // displays the random artwork details
     displayArtwork(randomArtwork);
   } catch (error) {
     console.error("Error fetching random artwork:", error);
 
-    // Shows a fallback message in the UI
+    //
     const mapContainer = document.getElementById("map-container");
     mapContainer.innerHTML = `<p>Failed to fetch a random artwork. Please try again later.</p>`;
   }
