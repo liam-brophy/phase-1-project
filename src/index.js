@@ -15,7 +15,7 @@ async function fetchData() {
   }
 } catch (error) {
   console.error("Error fetching data from API:", error);
-  return []; // Return an empty array if there's an error
+  return []; // Returns an empty array if there's an error
 }
 }
 
@@ -23,26 +23,24 @@ async function fetchData() {
 
 
 
-
-
-  async function fetchRandomArtwork() {
+  async function fetchFilteredRandomArtwork() {
     try {
-      // Fetch all artworks from the API
+      // Fetches all artworks from the API
       const artworks = await fetchData();
   
       if (artworks.length === 0) {
         throw new Error("No artworks found");
       }
   
-      // Select a random artwork from the returned array
+      // Selects a random artwork from the returned array
       const randomArtwork = artworks[Math.floor(Math.random() * artworks.length)];
   
-      // Display the random artwork details
+      // Displays the random artwork details
       displayArtwork(randomArtwork);
     } catch (error) {
       console.error("Error fetching random artwork:", error);
   
-      // Show a fallback message in the UI
+      // Shows a fallback message in the UI
       const mapContainer = document.getElementById("map-container");
       mapContainer.innerHTML = `<p>Failed to fetch a random artwork. Please try again later.</p>`;
     }
@@ -51,13 +49,13 @@ async function fetchData() {
 
 
   function displayArtwork(artwork) {
-    // Get the map-container div
+    // Gets the map-container div
     const mapContainer = document.getElementById("map-container");
   
-    // Clear any existing content
+    // Clears any existing content
     mapContainer.innerHTML = "";
   
-    // Populate the div with the random artwork details
+    // Populates the div with the random artwork details
     const title = document.createElement("h2");
     title.textContent = artwork.title;
   
@@ -70,7 +68,8 @@ async function fetchData() {
       : "https://via.placeholder.com/843x843.png?text=No+Image+Available";
     image.alt = artwork.title;
   
-    // Append the elements to the container
+    // Appends the elements to the container
+    //! Will have to change where this data is appended once we get to styling!
     mapContainer.appendChild(title);
     mapContainer.appendChild(artist);
     mapContainer.appendChild(image);
