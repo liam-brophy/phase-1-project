@@ -1,117 +1,153 @@
 
 async function fetchData() {
-  const apiUrl = "https://api.artic.edu/api/v1/artworks";
-  let artworks = [];
-  let page = 1; // starts at the first page
-  const limit = 100; // number of results per page
-  const maxPages = 5; // fetches up to 5 pages (adjust as needed)
-
-  try {
-    while (page <= maxPages) {
-      const response = await fetch(`${apiUrl}?page=${page}&limit=${limit}`);
-      const data = await response.json();
-
-      if (data.data && Array.isArray(data.data)) {
-        artworks = artworks.concat(data.data);
-      } else {
-        throw new Error("Unexpected API response structure");
-      }
-
-      page++;
-    }
-
-    return artworks;
-  } catch (error) {
-    console.error("Error fetching all artworks:", error);
-    return [];
-  }
+    const apiUrl = "https://api.artic.edu/api/v1/artworks";
+    const response = await fetch(apiUrl, {
+        method: 'GET',
+    });
+    const data = await response.json();
+    console.log(data);
 }
-console.log(fetchData())
-//!Currently fetches 500 artworks (limit 100 * max pages 5)
+
+//! GLOBAL VARIABLES
+
+const searchBar = document.getElementById("search-bar");
+const mapContainer = document.getElementById("map-container");
 
 
-async function fetchFilteredRandomArtwork() {
-  try {
-    // fetches all artworks from the API
-    const artworks = await fetchData();
 
-    const movementSelect = document.getElementById("movement-select");
-    const selectedValue = movementSelect.value;
 
-    let filteredArtworks;
+searchBar.addEventListener("input", handleSearch); //* Live search (on input)
+searchBar.addEventListener("keydown", handleEnterKey); //* Trigger search on Enter key
 
-    if (selectedValue) {
-    const [startYear, endYear] = selectedValue.split("-").map(Number);
-    filteredArtworks = artworks.filter(
-      artwork =>
-        artwork.date_start >= startYear && artwork.date_start <= endYear
-      //filters date by range
-    );
-    }else {
-      // if no movement is selected, use the full dataset
-      filteredArtworks = artworks;
+let debounceTimer;
+//? LIVE SEARCH FUNCTION
+function handleSearch(event) {
+    const userInput = event.target.value.trim(); //* Get the userInput (user input)
+
+    clearTimeout(debounceTimer); //*Clear previous debounce timer
+
+    debounceTimer = setTimeout(() => {
+        if (!userInput) {
+            clearResults(); //* If the userInput is empty, clear results
+            return;
+        }
+        fetchSearchResults(userInput); //* Fetch search results for the live search
+    }, 300); //* Delay to prevent rapid API calls (debounce)
+}
+
+function handleEnterKey(event) {
+    if (event.key === "Enter") {
+        const userInput = event.target.value.trim(); //* Get the userInput on "Enter" press
+        if (userInput) {
+            fetchSearchResults(userInput); //* Trigger the search
+        }
     }
+}
 
-    if (filteredArtworks.length === 0) {
-      throw new Error("No artworks found for the selected period");
+//? FETCH SEARCH USERINPUT RESULTS
+async function fetchSearchResults(userInput) {
+    const apiUrl = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(userInput)}`;
+
+    try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch search results");
+        }
+
+        const data = await response.json();
+        renderSearchResults(data.data); //* Pass  results -> render
+
+    } catch (error) {
+        handleError(error); //* Handle any errors during the fetchd
     }
+}
 
-    // selects a random artwork from the returned array
-    const randomArtwork =
-      filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
+//? RENDER SEARCH RESULTS TO MAP CONTAINER
+function renderSearchResults(results) {
+    clearResults();
 
-    // displays the random artwork details
-    displayArtwork(randomArtwork);
-  } catch (error) {
-    console.error("Error fetching random artwork:", error);
+    if (results.length > 0) {
+        results.forEach((result) => {
+            const imageUrl = result.image_id ?
+                `https://www.artic.edu/iiif/2/${result.image_id}/full/843,/0/default.jpg` :
+                'fallback_image_url_here.jpg'; //* Fallback if no image_id
 
-    //
+            console.log(result);  //* Debug: Log the result object
+            console.log(result.image_id);  //* Debug: Log the image_id
+
+            const img = createImageElement(imageUrl, result.title);
+            img.addEventListener("click", () => {
+                fetchArtworkDetail(result.id); //* Fetch artwork detail when clicked
+            });
+
+            mapContainer.appendChild(img);
+        });
+    } else {
+        mapContainer.innerHTML = "<p>No results found.</p>";
+    }
+}
+
+
+//?GET ARTWORK DETAILS
+async function fetchArtworkDetail(id) {
+    const apiUrl = `https://api.artic.edu/api/v1/artworks/${id}`;
+
+    try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch artwork details");
+        }
+
+        const data = await response.json();
+        renderArtworkDetail(data.data); //* Render artwork details
+
+    } catch (error) {
+        handleError(error); //* Handle errors during the fetch
+    }
+}
+
+//? RENDER ART DETAILS
+function renderArtworkDetail(artwork) {
     const mapContainer = document.getElementById("map-container");
-    mapContainer.innerHTML = `<p>Failed to fetch a random artwork. Please try again later.</p>`;
-  }
+    mapContainer.innerHTML = `
+    <h2>${artwork.title}</h2>
+    <img src="https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg" alt="${artwork.title}">
+    <p><strong>Artist:</strong> ${artwork.artist_title}</p>
+    <p><strong>Description:</strong> ${artwork.description || "No description available."}</p>
+  `;
+}
+
+//? CREATE ARTWORK IMAGE ELEMENT
+function createImageElement(src, alt) {
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = alt || "Artrk";
+    return img;
+}
+
+//? CLEAR SEARCH RESULTS
+function clearResults() {
+    const mapContainer = document.getElementById("map-container");
+    mapContainer.innerHTML = "";
+}
+
+
+function handleError(error) {
+    console.error("Error fetching API:", error);
+
+    const mapContainer = document.getElementById("map-container");
+    mapContainer.innerHTML = `
+    <p>Something went wrong. Please try again later.</p>
+    <p>Error: ${error.message}</p>
+  `;
 }
 
 
 
-function displayArtwork(artwork) {
-  // Gets the map-container div
-  const artworkText = document.getElementById("artwork-text");
-
-  // Clears any existing content
-  artworkText.innerHTML = "";
-
-  // Populates the div with the random artwork details
-  const title = document.createElement("p");
-  title.textContent = artwork.title;
-
-  const year = document.createElement("p");
-  year.textContent = artwork.date_start;
-
-  const artist = document.createElement("p");
-  artist.textContent = `${artwork.artist_title || "Unknown"}`;
-
-  const dimensions = document.createElement("p");
-  dimensions.textContent = artwork.dimensions;
-
-  const medium = document.createElement("p");
-  medium.textContent = artwork.medium;
-
-  const image = document.createElement("img");
-  image.src = artwork.image_id
-    ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
-    : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
-  image.alt = artwork.title;
-
-  // Appends the elements to the container
-  //! Will have to change where this data is appended once we get to styling!
-  //! Maybe we should validate if all of the data is available before appending! Some are missing details
-  artworkText.appendChild(title);
-  artworkText.appendChild(artist);
-  artworkText.appendChild(year);
-  artworkText.appendChild(dimensions);
-  artworkText.appendChild(medium);
-  artworkText.appendChild(image);
-}
 
 
-document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
+
+
+console.log(fetchData())
