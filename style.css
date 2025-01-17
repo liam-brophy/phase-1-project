@@ -1,13 +1,24 @@
+body{
+    font-family: "Funnel Display", serif;
+    /* text-align: center; */
+}
+
+
 #map-container{
     width: 80%;
     height: 500px;
     border: 1px solid black;
     margin: 20px;
     display: flex;
+    border-radius: 25px;
 }
 #artwork-text{
     text-align: left;
     z-index: 1;
+}
+
+#search-filters{
+    flex: auto;
 }
 
 #favorites-container{
@@ -15,6 +26,7 @@
     height: 200px;
     border: 1px solid black;
     margin: 20px;
+    border-radius: 25px;
 }
 
 #header{
@@ -30,4 +42,22 @@
 
 #favorite-button{
     height: 30px;
+    position: relative;
+    left: 95%;
+    top: 90%;
+}
+
+select{
+    border-radius: 15px
+    font-family: "Funnel Display", serif;
+}
+
+input{
+    border-radius: 15px;
+}
+
+#conjure-button{
+    border-radius: 15px;
+    width: auto;
+    font-family: "Funnel Display", serif;
 }
