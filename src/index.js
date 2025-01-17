@@ -1,21 +1,29 @@
 
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
-  try {
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-    });
-    const data = await response.json();
-    console.log(data);
+  let artworks = [];
+  let page = 1; // Start at the first page
+  const limit = 100; // Number of results per page
+  const maxPages = 5; // Fetch up to 5 pages (adjust as needed)
 
-    if (data.data && Array.isArray(data.data)) {
-      return data.data;
-    } else {
-      throw new Error("Unexpected API response structure");
+  try {
+    while (page <= maxPages) {
+      const response = await fetch(`${apiUrl}?page=${page}&limit=${limit}`);
+      const data = await response.json();
+
+      if (data.data && Array.isArray(data.data)) {
+        artworks = artworks.concat(data.data);
+      } else {
+        throw new Error("Unexpected API response structure");
+      }
+
+      page++;
     }
+
+    return artworks;
   } catch (error) {
-    console.error("Error fetching data from API:", error);
-    return []; // Returns an empty array if there's an error
+    console.error("Error fetching all artworks:", error);
+    return [];
   }
 }
 
@@ -72,10 +80,10 @@ function displayArtwork(artwork) {
   mapContainer.innerHTML = "";
 
   // Populates the div with the random artwork details
-  const title = document.createElement("h2");
+  const title = document.createElement("p");
   title.textContent = artwork.title;
 
-  const year = document.createElement("h3");
+  const year = document.createElement("p");
   title.textContent = artwork.date_start;
 
   const artist = document.createElement("p");
