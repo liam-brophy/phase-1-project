@@ -2,9 +2,9 @@
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
   let artworks = [];
-  let page = 1; // Start at the first page
-  const limit = 100; // Number of results per page
-  const maxPages = 5; // Fetch up to 5 pages (adjust as needed)
+  let page = 1; // starts at the first page
+  const limit = 100; // number of results per page
+  const maxPages = 5; // fetches up to 5 pages (adjust as needed)
 
   try {
     while (page <= maxPages) {
@@ -26,29 +26,31 @@ async function fetchData() {
     return [];
   }
 }
-
-
-
+console.log(fetchData())
+//!Currently fetches 500 artworks
 
 
 async function fetchFilteredRandomArtwork() {
   try {
-    // Fetches all artworks from the API
+    // fetches all artworks from the API
     const artworks = await fetchData();
 
     const movementSelect = document.getElementById("movement-select");
     const selectedValue = movementSelect.value;
-    const [startYear, endYear] = selectedValue.split("-").map(Number);
 
-    // Filter artworks based on the selected date range
-    const filteredArtworks = artworks.filter(
+    let filteredArtworks;
+
+    if (selectedValue) {
+    const [startYear, endYear] = selectedValue.split("-").map(Number);
+    filteredArtworks = artworks.filter(
       artwork =>
         artwork.date_start >= startYear && artwork.date_start <= endYear
+      //filters date by range
     );
-
-
-
-
+    }else {
+      // if no movement is selected, use the full dataset
+      filteredArtworks = artworks;
+    }
 
     if (filteredArtworks.length === 0) {
       throw new Error("No artworks found for the selected period");
@@ -56,7 +58,7 @@ async function fetchFilteredRandomArtwork() {
 
     // Selects a random artwork from the returned array
     const randomArtwork =
-    filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
+      filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
 
 
     // Displays the random artwork details
