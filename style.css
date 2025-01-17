@@ -4,6 +4,7 @@
     border: 1px solid black;
     margin: 20px;
     display: flex;
+    border-radius: 25px;
 }
 #artwork-text{
     text-align: left;
@@ -15,6 +16,7 @@
     height: 200px;
     border: 1px solid black;
     margin: 20px;
+    border-radius: 25px;
 }
 
 #header{
