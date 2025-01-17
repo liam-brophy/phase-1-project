@@ -27,7 +27,7 @@ async function fetchData() {
   }
 }
 console.log(fetchData())
-//!Currently fetches 500 artworks
+//!Currently fetches 500 artworks (limit 100 * max pages 5)
 
 
 async function fetchFilteredRandomArtwork() {
@@ -85,22 +85,31 @@ function displayArtwork(artwork) {
   title.textContent = artwork.title;
 
   const year = document.createElement("p");
-  title.textContent = artwork.date_start;
+  year.textContent = artwork.date_start;
 
   const artist = document.createElement("p");
-  artist.textContent = `Artist: ${artwork.artist_title || "Unknown"}`;
+  artist.textContent = `${artwork.artist_title || "Unknown"}`;
+
+  const dimensions = document.createElement("p");
+  dimensions.textContent = artwork.dimensions;
+
+  const medium = document.createElement("p");
+  medium.textContent = artwork.medium;
 
   const image = document.createElement("img");
   image.src = artwork.image_id
     ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
-    : "https://via.placeholder.com/843x843.png?text=No+Image+Available";
+    : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
   image.alt = artwork.title;
 
   // Appends the elements to the container
   //! Will have to change where this data is appended once we get to styling!
+  //! Maybe we should validate if all of the data is available before appending! Some are missing details
   mapContainer.appendChild(title);
   mapContainer.appendChild(artist);
   mapContainer.appendChild(year);
+  mapContainer.appendChild(dimensions);
+  mapContainer.appendChild(medium);
   mapContainer.appendChild(image);
 }
 
