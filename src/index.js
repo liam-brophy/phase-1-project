@@ -75,10 +75,10 @@ async function fetchFilteredRandomArtwork() {
 
 function displayArtwork(artwork) {
   // Gets the map-container div
-  const mapContainer = document.getElementById("map-container");
+  const artworkText = document.getElementById("artwork-text");
 
   // Clears any existing content
-  mapContainer.innerHTML = "";
+  artworkText.innerHTML = "";
 
   // Populates the div with the random artwork details
   const title = document.createElement("p");
@@ -105,12 +105,12 @@ function displayArtwork(artwork) {
   // Appends the elements to the container
   //! Will have to change where this data is appended once we get to styling!
   //! Maybe we should validate if all of the data is available before appending! Some are missing details
-  mapContainer.appendChild(title);
-  mapContainer.appendChild(artist);
-  mapContainer.appendChild(year);
-  mapContainer.appendChild(dimensions);
-  mapContainer.appendChild(medium);
-  mapContainer.appendChild(image);
+  artworkText.appendChild(title);
+  artworkText.appendChild(artist);
+  artworkText.appendChild(year);
+  artworkText.appendChild(dimensions);
+  artworkText.appendChild(medium);
+  artworkText.appendChild(image);
 }
 
 
