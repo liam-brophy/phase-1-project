@@ -11,7 +11,7 @@ body{
 
 #map-container {
     width: 80%;
-    height: 500px;
+    height: 100%;
     border: 1px solid black;
     margin: 20px auto;
     position: relative; /* Allows child elements to use absolute positioning */
@@ -48,7 +48,6 @@ body{
     font-size: 14px; /* Adjust text size */
     display: flex;
     flex-direction: column; /* Stacks text items vertically */
-    gap: 5px; /* Adds space between each line of text */
 }
 
 #search-filters{
