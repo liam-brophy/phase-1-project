@@ -98,7 +98,11 @@ function createFavorites() {
 const favButton = document.getElementById('fav-button')
 
 //!!Will need adjusting depending on names of code for image grabs!!
+<<<<<<< HEAD
 function favClick(e) {
+=======
+function favClick() {
+>>>>>>> fd616c5 (Updates and additions to favorite button and displays as well as some HTML updates for Favorites)
   const imgId = e.target.getAttribute('data-img-id')
   const imgElement = document.getElementById(imgId)
   const imageUrl = imgElement.src
@@ -138,6 +142,7 @@ document.querySelectorAll('fav-button').forEach(button => {
 //     imgElement.alt = 'Favorite Picture';
 //     favoriteImagesContainer.appendChild(imgElement);
 //   });
+<<<<<<< HEAD
 // };
 function displayArtwork(artwork) {
   // Gets the map-container div
@@ -181,3 +186,6 @@ function displayArtwork(artwork) {
 
 
 document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
+=======
+// };
+>>>>>>> fd616c5 (Updates and additions to favorite button and displays as well as some HTML updates for Favorites)
