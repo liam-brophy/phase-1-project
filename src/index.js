@@ -1,6 +1,5 @@
 
 async function fetchData() {
-  console.log(apiUrl)
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
   let artworks = []; //initializes an empty array
   let page = 1; // starts at the first page
@@ -44,8 +43,12 @@ async function fetchFilteredRandomArtwork() {
     const movementSelect = document.getElementById("movement-select");
     const selectedValue = movementSelect.value;
 
-    let filteredArtworks;
+    const themeSelect = document.getElementById("movement-select");
+    const selectedTheme = movementSelect.value;
 
+    let filteredArtworks = artworks;
+
+    //!FILTER BY MOVEMENT
     if (selectedValue) {
     const [startYear, endYear] = selectedValue.split("-").map(Number);
     filteredArtworks = artworks.filter(
@@ -53,9 +56,16 @@ async function fetchFilteredRandomArtwork() {
         artwork.date_start >= startYear && artwork.date_start <= endYear
       //filters date by range
     );
-    }else {
-      // if no movement is selected, use the full dataset //!Will repeat this step for theme
-      filteredArtworks = artworks;
+    }
+
+    //!FILTER BY THEME
+    if (selectedTheme) {
+      filteredArtworks = filteredArtworks.filter(artwork =>
+        artwork.subject_titles &&
+        artwork.subject_titles.some(subject =>
+          subject.toLowerCase().includes(selectedTheme.toLowerCase())
+        )
+      );
     }
 
     if (filteredArtworks.length === 0) {
@@ -121,3 +131,4 @@ function displayArtwork(artwork) {
 
 
 document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
+
