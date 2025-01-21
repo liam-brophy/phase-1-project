@@ -9,35 +9,43 @@ body{
 }
 
 
-#map-container{
+#map-container {
     width: 80%;
     height: 500px;
     border: 1px solid black;
     margin: 20px auto;
-    display: flex;
-    justify-content: center; /* Centers the content inside */
-    align-items: center;
-    position: relative; /* For positioning the text over the image */
+    position: relative; /* Enables child elements to be positioned relative to this container */
     border-radius: 25px;
-    overflow: hidden; /* Ensures content doesn't spill outside the container */
-}
-#map-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image fills the container without distortion */
-    /* position: absolute; */
-    z-index: 1; /* Places the image behind the text */
+    overflow: hidden; /* Ensures nothing spills outside the container */
 }
 
-#artwork-text{
-    position: absolute; /* Allows placement over the image */
-    bottom: 10px; /* Positions text near the bottom */
-    left: 10px; /* Positions text near the left */
-    /* background-color: rgba(0, 0, 0, 0.6);  */
-    color: white; /* White text for contrast */
-    padding: 10px; /* Adds spacing around the text */
+#artwork-text {
+    position: relative; /* This container holds the image and text */
+    width: 100%;
+    height: 100%;
+}
+
+#artwork-text img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the container proportionally */
+    z-index: 1; /* Keeps the image below the text */
+    position: absolute; /* Ensures the image fills the container */
+    top: 0;
+    left: 0;
+}
+
+#artwork-text p {
+    position: absolute;
+    bottom: 10px; /* Positions the text near the bottom */
+    left: 10px; /* Positions the text near the left */
+    background-color: rgba(0, 0, 0, 0.6); /* Adds a semi-transparent background for readability */
+    color: white; /* Ensures the text is readable */
+    padding: 10px; /* Adds spacing inside the text box */
     border-radius: 10px; /* Rounds the corners of the text box */
-    z-index: 2; /* Ensures text appears above the image */
+    z-index: 2; /* Ensures the text is above the image */
+    max-width: 90%; /* Prevents the text from being too wide */
+    font-size: 14px; /* Adjust text size for readability */
 }
 
 #search-filters{

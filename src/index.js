@@ -100,7 +100,7 @@ function displayArtwork(artwork) {
   title.textContent = artwork.title;
 
   const year = document.createElement("p");
-  year.textContent = artwork.date_start;
+  year.textContent = `${artwork.date_start || "Unknown"}`;
 
   const artist = document.createElement("p");
   artist.textContent = `${artwork.artist_title || "Unknown"}`;
