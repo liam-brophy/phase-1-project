@@ -1,16 +1,22 @@
 
 async function fetchData() {
+  console.log(apiUrl)
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
-  let artworks = [];
+  let artworks = []; //initializes an empty array
   let page = 1; // starts at the first page
   const limit = 100; // number of results per page
   const maxPages = 5; // fetches up to 5 pages (adjust as needed)
 
   try {
-    while (page <= maxPages) {
+    while (page <= maxPages) { //increment only while there still are pages
+      //?page=${page} adds a query parameter specifying which page of results to fetch.
+      //&limit=${limit} specifies the number of items per page.
       const response = await fetch(`${apiUrl}?page=${page}&limit=${limit}`);
       const data = await response.json();
 
+      //!validation
+      //data.data means the parsed data object has a property called data!
+      //array.isArray is ensuring that data.data IS an array
       if (data.data && Array.isArray(data.data)) {
         artworks = artworks.concat(data.data);
       } else {
@@ -48,7 +54,7 @@ async function fetchFilteredRandomArtwork() {
       //filters date by range
     );
     }else {
-      // if no movement is selected, use the full dataset
+      // if no movement is selected, use the full dataset //!Will repeat this step for theme
       filteredArtworks = artworks;
     }
 
