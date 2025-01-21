@@ -4,6 +4,8 @@
     border: 1px solid black;
     margin: 20px;
     display: flex;
+    justify-content: center;   /*to make sure the art and title is in middle*/
+    align-items: center;
 }
 #artwork-text{
     text-align: left;
@@ -31,3 +33,12 @@
 #favorite-button{
     height: 30px;
 }
+
+#search-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 20px;
+}
+
