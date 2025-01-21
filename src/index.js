@@ -81,7 +81,7 @@ function sortResultsByStartsWith(results, searchInput) {
 
 //! FETCH SEARCH SUGGS
 async function fetchSearchSuggestions(userInput) {
-    // Increase the limit to get more results for better sorting
+    //* increase the limit to get more results for better sorting
     const apiUrl = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(userInput)}&fields=id,title,image_id&limit=20`;
     const response = await fetch(apiUrl);
     
@@ -142,12 +142,12 @@ async function handleEnterKey(event) {
             } catch (error) {
                 handleError(error);
             }
-        }
+        }//* reset the selected artwork to null after handling the Enter key
         selectedArtwork = null;
     }
 }
 //TODO CONSULT TEAM ABOUT THIS FEATURE
-//? HIDES SUGGESTIONS WHEN CLICKING OUTSIDE SEARCH BAR 
+//* hides suggs when clicking out of search bar 
 document.addEventListener("click", (event) => {
      
      if (!event.target.closest(".search-container") && 
@@ -177,6 +177,7 @@ async function fetchArtworkDetail(id) {
 
 //! RENDER ART DETAILS! (IMG AND TITLE)
 function renderArtworkDetail(artwork) {
+    //*set html of map container to show art and title
     mapContainer.innerHTML = `
         <div class="artwork-detail">
             <h2>${artwork.title}</h2>
