@@ -28,7 +28,7 @@ async function fetchData() {
     return [];
   }
 }
-console.log(fetchData())
+// console.log(fetchData())
 //!Currently fetches 500 artworks (limit 100 * max pages 5)
 
 
@@ -73,16 +73,13 @@ async function fetchFilteredRandomArtwork() {
   }
 }
 
-
-
-console.log(fetchData())
-
+fetchFilteredRandomArtwork();
 
 
 // Creating a Favorites list
 let favorites = [];
 
-function createFavorites() {
+function createFavorites(e) {
   //Get class name to retrieve art pieces to save for list
   const favoriteList = document.getElementsById("");
   favoriteList.innerText = ''
@@ -98,11 +95,7 @@ function createFavorites() {
 const favButton = document.getElementById('fav-button')
 
 //!!Will need adjusting depending on names of code for image grabs!!
-<<<<<<< HEAD
 function favClick(e) {
-=======
-function favClick() {
->>>>>>> fd616c5 (Updates and additions to favorite button and displays as well as some HTML updates for Favorites)
   const imgId = e.target.getAttribute('data-img-id')
   const imgElement = document.getElementById(imgId)
   const imageUrl = imgElement.src
@@ -142,8 +135,9 @@ document.querySelectorAll('fav-button').forEach(button => {
 //     imgElement.alt = 'Favorite Picture';
 //     favoriteImagesContainer.appendChild(imgElement);
 //   });
-<<<<<<< HEAD
 // };
+
+
 function displayArtwork(artwork) {
   // Gets the map-container div
   const artworkText = document.getElementById("artwork-text");
@@ -186,6 +180,3 @@ function displayArtwork(artwork) {
 
 
 document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
-=======
-// };
->>>>>>> fd616c5 (Updates and additions to favorite button and displays as well as some HTML updates for Favorites)

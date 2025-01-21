@@ -8,6 +8,10 @@
     <title>Art Gallery</title> 
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script defer type="module" src="./src/index.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -20,16 +24,28 @@
         <input type="button" name="conjure" id="conjure-button" />
       
 
-            <!-- This is the Period Select -->
-            <label for="period">Period</label>
-            <select name="period" id="period-select">
-                <option value="Renaissance">Renaissance</option>
-            </select>
-            <!-- This is the Medium Select -->
-            <label for="medium">Medium</label>
-            <select name="period" id="period-select">
-                <option value="Acrylic">Acrylic</option>
-            </select>
+
+        <!-- This is the Period Select -->
+        <label for="movement">Movement</label>
+        <select id="movement-select">
+            <option value="">All Periods</option> <!-- default option, no selection -->
+            <option value="1400-1600">Renaissance (1400–1600)</option>
+            <option value="1600-1750">Baroque (1600–1750)</option>
+            <option value="1750-1820">Neoclassicism (1750–1820)</option>
+            <option value="1800-1850">Romanticism (1800–1850)</option>
+            <option value="1840-1880">Realism (1840–1880)</option>
+            <option value="1860-1890">Impressionism (1860–1890)</option>
+            <option value="1880-1905">Post-Impressionism (1880–1905)</option>
+            <option value="1900-1950">Modernism (1900–1950)</option>
+            <option value="1950-2025">Contemporary Art (1950–Present)</option>
+        </select>
+        <!-- This is the Medium Select -->
+        <label for="medium">Medium</label>
+        <select name="period" id="period-select">
+            <option value="Acrylic">Acrylic</option>
+        </select>
+
+    </div>
 
     </div>
 
@@ -44,7 +60,6 @@
 <h4>Favorites</h4>
 <div id="favorites-container">
 
-            <h4>Favorites</h4>
         <div id="favorites-container-cards">
             <h5>Your Favorite Art Pieces</h5>
             <ul id="favorites-list">
