@@ -1,17 +1,10 @@
 
-async function fetchData() {
-    const apiUrl = "https://api.artic.edu/api/v1/artworks";
-    const response = await fetch(apiUrl, {
-        method: 'GET',
-    });
-    const data = await response.json();
-    console.log(data);
-}
 
-//add modal search results
+
+//? add modal search results
 //add images to search results
 
-
+console.log()
 //! GLOBAL VARIABLES
 
 const searchBar = document.getElementById("search-bar");
@@ -23,28 +16,29 @@ const MAX_SUGGESTIONS = 5;
 //! EVENT LISTENERS
 searchBar.addEventListener("input", handleSearch);
 searchBar.addEventListener("keydown", handleEnterKey);
-
+//* avoid spam
 let debounceTimer;
+
 
 
 //!HANDLE SEARCH INPUT
 async function handleSearch(event) {
     //*take in and trim user input
     const userInput = event.target.value.trim();
-    //! prevent overloading 
+    //! prevent overloading
     clearTimeout(debounceTimer);
 
     debounceTimer = setTimeout(async () => {
-        //*if userinpout is empty then exit early 
-        if (!userInput) { 
+        //*if userinpout is empty then exit early
+        if (!userInput) {
             searchSuggestions.style.display = "none";
             return;
         }
         
-        try {  //*if its not empty calls 
+        try {  //*if its not empty calls
             //*fetches search suggs to get matches
             const results = await fetchSearchSuggestions(userInput);
-            //*results get sorted, prioritizes suggs that start with user input 
+            //*results get sorted, prioritizes suggs that start with user input
             const sortedResults = sortResultsByStartsWith(results, userInput);
             //*only shows max 5 suggs at a time
             renderSuggestions(sortedResults.slice(0, MAX_SUGGESTIONS));
@@ -79,17 +73,15 @@ function sortResultsByStartsWith(results, searchInput) {
     });
 }
 
-//! FETCH SEARCH SUGGS
+//! FETCH SEARCH SUGGS 
 async function fetchSearchSuggestions(userInput) {
     //* increase the limit to get more results for better sorting
     const apiUrl = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(userInput)}&fields=id,title,image_id&limit=20`;
     const response = await fetch(apiUrl);
-    
     if (!response.ok) {
         throw new Error("Failed to fetch suggestions");
     }
-    
-    const data = await response.json();
+    const data = await response.json(); //.body .ok .status
     return data.data;
 }
 
@@ -120,7 +112,7 @@ function renderSuggestions(results) {
     }
 }
 
-//*HANDLE ENTER KEY
+//!HANDLE ENTER KEY
 async function handleEnterKey(event) {
     if (event.key === "Enter") {
         //*clean up user input
@@ -146,7 +138,8 @@ async function handleEnterKey(event) {
         selectedArtwork = null;
     }
 }
-//TODO CONSULT TEAM ABOUT THIS FEATURE
+
+//* CONSULT TEAM ABOUT THIS FEATURE
 //* hides suggs when clicking out of search bar 
 document.addEventListener("click", (event) => {
      
@@ -181,13 +174,13 @@ function renderArtworkDetail(artwork) {
     mapContainer.innerHTML = `
         <div class="artwork-detail">
             <h2>${artwork.title}</h2>
-            <img src="https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg" 
+            <img src="https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg"
                  alt="${artwork.title}"
-                 style="max-width: 850%; height: 300px;"></div>
+                 style="max-width: 800px; height: 300px;"></div>
     `;
 
 }
-
+//! ERROR HANDLING
 function handleError(error) {
     console.error("Error:", error);
     mapContainer.innerHTML = `
