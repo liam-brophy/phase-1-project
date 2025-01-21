@@ -20,27 +20,33 @@ const searchSuggestions = document.getElementById("search-suggestions");
 let selectedArtwork = null;
 const MAX_SUGGESTIONS = 5;
 
-// Event listeners
+//! EVENT LISTENERS
 searchBar.addEventListener("input", handleSearch);
 searchBar.addEventListener("keydown", handleEnterKey);
 
 let debounceTimer;
 
-// Handle search input
-async function handleSearch(event) {
-    const userInput = event.target.value.trim();
 
+//!HANDLE SEARCH INPUT
+async function handleSearch(event) {
+    //*take in and trim user input
+    const userInput = event.target.value.trim();
+    //! prevent overloading 
     clearTimeout(debounceTimer);
 
     debounceTimer = setTimeout(async () => {
-        if (!userInput) {
+        //*if userinpout is empty then exit early 
+        if (!userInput) { 
             searchSuggestions.style.display = "none";
             return;
         }
         
-        try {
+        try {  //*if its not empty calls 
+            //*fetches search suggs to get matches
             const results = await fetchSearchSuggestions(userInput);
+            //*results get sorted, prioritizes suggs that start with user input 
             const sortedResults = sortResultsByStartsWith(results, userInput);
+            //*only shows max 5 suggs at a time
             renderSuggestions(sortedResults.slice(0, MAX_SUGGESTIONS));
         } catch (error) {
             handleError(error);
@@ -48,27 +54,32 @@ async function handleSearch(event) {
     }, 300);
 }
 
-// Sort results to prioritize titles that start with the search input
+//! HANDLE SEARCH RESULTS WITH USER INPUT
 function sortResultsByStartsWith(results, searchInput) {
     const searchLower = searchInput.toLowerCase();
-    
+    //*sorts the result array compares a and b
     return results.sort((a, b) => {
         const titleA = a.title.toLowerCase();
         const titleB = b.title.toLowerCase();
         
-        // Check if titles start with search input
+        //* check if titles start with search input
+        //* for each item its comapred with title a & b
+        //* checks if a and b start with userInput
+        //* if aStartswith is true if titleA starts with searchlower
+        //* if aStartswith is true if titleB starts with searchlower
+
         const aStartsWith = titleA.startsWith(searchLower);
         const bStartsWith = titleB.startsWith(searchLower);
         
         if (aStartsWith && !bStartsWith) return -1;
         if (!aStartsWith && bStartsWith) return 1;
         
-        // If neither or both start with search input, sort alphabetically
+        //* if neither or both start with search input, sort alphabetically
         return titleA.localeCompare(titleB);
     });
 }
 
-// Fetch search suggestions
+//! FETCH SEARCH SUGGS
 async function fetchSearchSuggestions(userInput) {
     // Increase the limit to get more results for better sorting
     const apiUrl = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(userInput)}&fields=id,title,image_id&limit=20`;
@@ -82,24 +93,29 @@ async function fetchSearchSuggestions(userInput) {
     return data.data;
 }
 
-// Render suggestions dropdown
+//! RENDER SEARCH SUGGS DROP DOWN
 function renderSuggestions(results) {
+    //*clear suggs from drop down
     searchSuggestions.innerHTML = "";
-    
+    //*check for rssults to display
     if (results.length > 0) {
         results.forEach(result => {
+            //*create new div for each sugg
             const div = document.createElement("div");
             div.className = "suggestion-item";
+            //*display title
             div.textContent = result.title;
+            //todo ADD CLICKABLE SUGG
             div.addEventListener("click", () => {
                 searchBar.value = result.title;
                 selectedArtwork = result;
+                //*hide sug after clicked
                 searchSuggestions.style.display = "none";
             });
             searchSuggestions.appendChild(div);
         });
         searchSuggestions.style.display = "block";
-    } else {
+    } else { //*if no suggs hide dropdown
         searchSuggestions.style.display = "none";
     }
 }
@@ -107,19 +123,21 @@ function renderSuggestions(results) {
 //*HANDLE ENTER KEY
 async function handleEnterKey(event) {
     if (event.key === "Enter") {
+        //*clean up user input
         const userInput = searchBar.value.trim();
+        //*hides suggs
         searchSuggestions.style.display = "none";
-        
+        //*if art is already selected fetch info about work
         if (selectedArtwork) {
             await fetchArtworkDetail(selectedArtwork.id);
         } else if (userInput) {
-            try {
+            try { //*if no art selected setch suggs based on the input, prioritize the first results
                 const results = await fetchSearchSuggestions(userInput);
                 const sortedResults = sortResultsByStartsWith(results, userInput);
                 if (sortedResults.length > 0) {
                     await fetchArtworkDetail(sortedResults[0].id);
-                } else {
-                    mapContainer.innerHTML = "<p>No artwork found. Please try a different search.</p>";
+                } else { //*if no art found
+                    mapContainer.textContent = "No artwork found. Please try a different search.";
                 }
             } catch (error) {
                 handleError(error);
