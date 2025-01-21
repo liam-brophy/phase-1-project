@@ -95,37 +95,44 @@ function displayArtwork(artwork) {
   // Clears any existing content
   artworkText.innerHTML = "";
 
-  // Populates the div with the random artwork details
-  const title = document.createElement("p");
-  title.textContent = artwork.title;
-
-  const year = document.createElement("p");
-  year.textContent = `${artwork.date_start || "Unknown"}`;
-
-  const artist = document.createElement("p");
-  artist.textContent = `${artwork.artist_title || "Unknown"}`;
-
-  const dimensions = document.createElement("p");
-  dimensions.textContent = artwork.dimensions;
-
-  const medium = document.createElement("p");
-  medium.textContent = artwork.medium;
-
   const image = document.createElement("img");
   image.src = artwork.image_id
     ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
     : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
   image.alt = artwork.title;
 
-  // Appends the elements to the container
-  //! Will have to change where this data is appended once we get to styling!
-  //! Maybe we should validate if all of the data is available before appending! Some are missing details
-  artworkText.appendChild(title);
-  artworkText.appendChild(artist);
-  artworkText.appendChild(year);
-  artworkText.appendChild(dimensions);
-  artworkText.appendChild(medium);
   artworkText.appendChild(image);
+
+  // Create a container for text details
+  const textContainer = document.createElement("div");
+  textContainer.classList.add("artwork-details"); // Use the new CSS class
+
+  // Populates the div with the random artwork details
+  const title = document.createElement("p");
+  title.textContent = `Title: ${artwork.title || "Unknown"}`;
+
+  const artist = document.createElement("p");
+  artist.textContent = `Artist: ${artwork.artist_title || "Unknown"}`;
+
+  const year = document.createElement("p");
+  year.textContent = `Year: ${artwork.date_start || "Unknown"}`;
+
+  const dimensions = document.createElement("p");
+  dimensions.textContent = `Dimensions: ${artwork.dimensions || "Not provided"}`;
+
+  const medium = document.createElement("p");
+  medium.textContent = `Medium: ${artwork.medium || "Not provided"}`;
+
+  // Append details to the container
+  textContainer.appendChild(title);
+  textContainer.appendChild(artist);
+  textContainer.appendChild(year);
+  textContainer.appendChild(dimensions);
+  textContainer.appendChild(medium);
+
+  // Append the text container to artwork-text
+  artworkText.appendChild(textContainer);
+
 }
 
 
