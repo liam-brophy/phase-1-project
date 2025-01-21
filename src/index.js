@@ -1,4 +1,3 @@
-
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
   let artworks = []; //initializes an empty array
@@ -131,4 +130,3 @@ function displayArtwork(artwork) {
 
 
 document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
-
