@@ -8,6 +8,9 @@ const MAX_SUGGESTIONS = 5;
 let debounceTimer;
 let cachedArtworks = []; // caches artworks to avoid refetching
 const artworkText = document.getElementById("artwork-text");
+
+
+
 searchSuggestions.style.display = "none";
 
 async function fetchData() {
@@ -36,7 +39,7 @@ async function fetchData() {
       page++;
     }
     cachedArtworks = artworks
-    displayArtwork(artworks[1]) //displays imm
+    displayArtwork(artworks[1]) //displays immiate
     return artworks;
   } catch (error) {
     console.error("Error fetching all artworks:", error);
@@ -312,7 +315,7 @@ document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container") &&
       !event.target.closest(".search-right-filters") &&
       !event.target.closest("select")) {
-      
+
  }
 
 });

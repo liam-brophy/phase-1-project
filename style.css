@@ -6,7 +6,15 @@ body{
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     flex-direction: column; /* text-align: center; */
+    background-color: white;
 }
+
+
+
+
+
+
+
 
 
 #map-container {
@@ -108,6 +116,7 @@ input{
     border-radius: 5px;
     padding: 2%;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
 #search-bar{
