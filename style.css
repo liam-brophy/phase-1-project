@@ -1,3 +1,9 @@
+body{
+    font-family: "Funnel Display", serif;
+    /* text-align: center; */
+}
+
+
 #map-container{
     width: 80%;
     height: 500px;
@@ -6,10 +12,15 @@
     display: flex;
     justify-content: center;   /*to make sure the art and title is in middle*/
     align-items: center;
+    border-radius: 25px;
 }
 #artwork-text{
     text-align: left;
     z-index: 1;
+}
+
+#search-filters{
+    flex: auto;
 }
 
 #favorites-container{
@@ -17,6 +28,7 @@
     height: 200px;
     border: 1px solid black;
     margin: 20px;
+    border-radius: 25px;
 }
 
 #header{

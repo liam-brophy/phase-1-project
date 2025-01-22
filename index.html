@@ -7,6 +7,12 @@
     <title>The Gallery</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script defer type="module" src="./src/index.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+
 </head>
 
 <body>
@@ -19,7 +25,7 @@
         <input type="text" name="search" id="search-bar" placeholder="Search"/>
         <div id="search-suggestions" class="search-suggestions"></div>
 
-        <input type="button" name="conjure" id="conjure-button" />
+        <button id="conjure-button">Conjure</button>
 
 
 
@@ -38,15 +44,20 @@
             <option value="1950-2025">Contemporary Art (1950–Present)</option>
         </select>
         <!-- This is the Medium Select -->
-        <label for="medium">Medium</label>
-        <select name="period" id="period-select">
-            <option value="Acrylic">Acrylic</option>
+        <label for="themes">Themes</label>
+        <select name="themes" id="theme-select">
+            <option value="">Select Theme</option>
+            <option value="women">Women Artists</option>
         </select>
 
     </div>
 
     <div id="map-container">
-        <!-- This will be where the map (art?) is displayed after it is fetched -->
+        <!-- This is where the art is displayed after it is fetched -->
+         <div id="artwork-text">
+         </div>
+        <!-- FAVORITE BUTTON  -->
+        <input type="button" name="favorite" id="favorite-button"/>
     </div>
 
     </div>
