@@ -1,4 +1,14 @@
+//! GLOBAL VARIABLES
 
+const searchBar = document.getElementById("search-bar");
+const mapContainer = document.getElementById("map-container");
+const searchSuggestions = document.getElementById("search-suggestions");
+let selectedArtwork = null;
+const MAX_SUGGESTIONS = 5;
+let debounceTimer;
+let cachedArtworks = []; // caches artworks to avoid refetching
+const artworkText = document.getElementById("artwork-text");
+searchSuggestions.style.display = "none";
 
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
@@ -25,21 +35,14 @@ async function fetchData() {
 
       page++;
     }
-
+    cachedArtworks = artworks
+    displayArtwork(artworks[1]) //displays imm
     return artworks;
   } catch (error) {
     console.error("Error fetching all artworks:", error);
     return [];
   }
 }
-console.log(fetchData())
-//!Currently fetches 500 artworks (limit 100 * max pages 5)
-
-//! EVENT LISTENERS
-document.getElementById("movement-select").addEventListener("change", handleFilterChange);
-document.getElementById("theme-select").addEventListener("change", handleFilterChange);
-
-let cachedArtworks = []; // caches artworks to avoid refetching
 
 async function handleFilterChange() {
   if (cachedArtworks.length === 0) {
@@ -88,9 +91,174 @@ function displayNoResultsMessage() {
   mapContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
 }
 
+//!HANDLE SEARCH INPUT
+async function handleSearch(event) {
+  const userInput = event.target.value.trim();
+  clearTimeout(debounceTimer);
+
+  debounceTimer = setTimeout(async () => {
+      if (!userInput) {
+          searchSuggestions.style.display = "none";
+          return;
+      }
+      try {
+          // Use cached artworks instead of making an API call
+          if (cachedArtworks.length === 0) {
+              cachedArtworks = await fetchData();
+          }
+
+          // Filter cached artworks that start with user input
+          const results = cachedArtworks.filter(artwork =>
+              artwork.title &&
+              artwork.title.toLowerCase().startsWith(userInput.toLowerCase())
+          );
+
+          // Sort results alphabetically
+          const sortedResults = results.sort((a, b) =>
+              a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+          );
+
+          renderSuggestions(sortedResults.slice(0, MAX_SUGGESTIONS));
+      } catch (error) {
+          console.error("Search error:", error);
+          searchSuggestions.style.display = "none";
+      }
+  }, 300);
+}
+
+//! HANDLE SEARCH RESULTS WITH USER INPUT
+function sortResultsByStartsWith(results, searchInput) {
+    const searchLower = searchInput.toLowerCase();
+    //*sorts the result array compares a and b
+    return results.sort((a, b) => {
+        const titleA = a.title.toLowerCase();
+        const titleB = b.title.toLowerCase();
+        //* check if titles start with search input
+        //* for each item its comapred with title a & b
+        //* checks if a and b start with userInput
+        //* if aStartswith is true if titleA starts with searchlower
+        //* if aStartswith is true if titleB starts with searchlower
+
+        const aStartsWith = titleA.startsWith(searchLower);
+        const bStartsWith = titleB.startsWith(searchLower);
+        
+        if (aStartsWith && !bStartsWith) return -1;
+        if (!aStartsWith && bStartsWith) return 1;
+        
+        //* if neither or both start with search input, sort alphabetically
+        return titleA.localeCompare(titleB);
+    });
+}
+
+//! FETCH SEARCH SUGGS 
+async function fetchSearchSuggestions(userInput) {
+    //* increase the limit to get more results for better sorting
+    const apiUrl = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(userInput)}&fields=id,title,image_id&limit=20`;
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+        throw new Error("Failed to fetch suggestions");
+    }
+    const data = await response.json(); //.body .ok .status
+    return data.data;
+}
+
+//! RENDER SEARCH SUGGS DROP DOWN
+function renderSuggestions(results) {
+  searchSuggestions.innerHTML = "";
+  
+  if (results.length > 0) {
+      results.forEach(result => {
+          const div = document.createElement("div");
+          div.className = "suggestion-item";
+          div.textContent = result.title;
+          
+          div.addEventListener("click", () => {
+              searchBar.value = result.title;
+              selectedArtwork = result;
+              searchSuggestions.style.display = "none";
+              displayArtwork(result);  // Display the artwork immediately
+          });
+          
+          searchSuggestions.appendChild(div);
+      });
+      searchSuggestions.style.display = "block";
+  } else {
+      searchSuggestions.style.display = "none";
+      const noResultsDiv = document.createElement("div");
+      noResultsDiv.className = "suggestion-item";
+      noResultsDiv.textContent = "No artworks found starting with '" + searchBar.value + "'";
+      searchSuggestions.appendChild(noResultsDiv);
+      searchSuggestions.style.display = "block";
+  }
+}
+
+
+//!HANDLE ENTER KEY
+async function handleEnterKey(event) {
+  if (event.key === "Enter") {
+      const userInput = searchBar.value.trim();
+      searchSuggestions.style.display = "none";
+
+      if (selectedArtwork) {
+          displayArtwork(selectedArtwork);
+      } else if (userInput) {
+          const results = cachedArtworks.filter(artwork => 
+              artwork.title && 
+              artwork.title.toLowerCase().startsWith(userInput.toLowerCase())
+          );
+
+          if (results.length > 0) {
+              displayArtwork(results[0]);
+          } else {
+              displayNoResultsMessage();
+          }
+      }
+      selectedArtwork = null;
+  }
+}
+
+//! FETCH ARTWORK DETIALS
+async function fetchArtworkDetail(id) {
+  const apiUrl = `https://api.artic.edu/api/v1/artworks/${id}`;
+
+  try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+          throw new Error("Failed to fetch artwork details");
+      }
+
+      const data = await response.json();
+      renderArtworkDetail(data.data);
+  } catch (error) {
+      handleError(error);
+  }
+}
+
+//! RENDER ART DETAILS! (IMG AND TITLE)
+function renderArtworkDetail(artwork) {
+  //*set html of map container to show art and title
+  artworkText.innerHTML = `
+      
+          
+          <img src="https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg"
+               alt="${artwork.title}"
+               />
+               <div class="artwork-details">
+               <p>Title: ${artwork.title} </p>
+               <p>Artist: ${artwork.artist}</p>
+               <p>Year: ${artwork.year}</p>
+               <p>Dimensions:${artwork.dimensions}</p>
+               <p>Medium:${artwork.medium || "Not provided"}</p></div>
+  `;
+
+}
+//* CONSULT TEAM ABOUT THIS FEATURE
+//* hides suggs when clicking out of search bar
+
+
 function displayArtwork(artwork) {
   // Gets the map-container div
-  const artworkText = document.getElementById("artwork-text");
+  
 
   // Clears any existing content
   artworkText.innerHTML = "";
@@ -136,114 +304,85 @@ function displayArtwork(artwork) {
 }
 
 
+//!EVENT LISTENERS
 document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
+document.getElementById("movement-select").addEventListener("change", handleFilterChange);
+document.getElementById("theme-select").addEventListener("change", handleFilterChange);
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".search-container") &&
+      !event.target.closest(".search-right-filters") &&
+      !event.target.closest("select")) {
+      
+ }
+
+});
+searchBar.addEventListener("input", handleSearch);
+searchBar.addEventListener("keydown", handleEnterKey);
 
 
-
-
+fetchData()
 
 
 // Creating a Favorites list
 let favorites = [];
 
-function createFavorites(e) {
-  //Get id name to retrieve art pieces to save for list
-  const favoriteList = document.getElementsById("favorites-list");
-  favoriteList.innerText = ''
+//Not going to be used right now
+function createFavorites() {
+  //Get class name to retrieve art pieces to save for list
+  const favoriteList = document.getElementById("favorites-list");
+  favoriteList.innerHTML = ''
 
-  favorites.forEach(favoritesList => {
+  favorites.forEach(favoriteArt => {
     const listArt = document.createElement('li')
-    listArt.textContext = `Art Piece: ${favoritesList}`
+    listArt.textContext = `Art Piece: ${favoriteArt.title}`
     favoriteList.appendChild(listArt)
-  })
+  });
 }
 
 //Click Event Listener for Favorites Button
 const favButton = document.getElementById('favorite-button')
+const favoriteList = document.getElementById("favorites-list")
 
-//!!Will need adjusting depending on names of code for image grabs!!
-function favClick(e) {
-  const imgId = e.target.getAttribute('artwork-text')
-  const imgElement = document.getElementById(imgId)
-  alert("Favorite Button Clicked")
+//Click button being used for Favorites!
+function favClick() {
+  const image = document.querySelector("#artwork-text img")
+  const copyImage = image.cloneNode(true)
+  favoriteList.appendChild(copyImage)
 }
-
+//Callback is a function passed as an argumnent to another function whose exicution will be delayed in time
 favButton.addEventListener('click', favClick)
 
-document.querySelectorAll('fav-button').forEach(button => {
-  button.addEventListener('click', async (event) => {
-    const imgId = event.target.getAttribute('data-img-id')
-    const imgElement = document.getElementById(imgId)
-    const imageUrl = imgElement.src; 
 
-    if (!favorites.includes(imageUrl)) {
-      try {
-        favorites.push(imageUrl)
-        await saveFavorite(imageUrl)
-        updateFavoritesDisplay()
-      } catch (error) {
-        alert(error)
-      }
-    } else {
-      alert('This picture is already in your favorites!');
-    }
-  });
-});
+//!!! IGNORE THIS CODE !!! NOT BEING USED !!!
+// // document.querySelectorAll('fav-button').forEach(button => {
+//   button.addEventListener('click', async (event) => {
+//     const imgId = event.target.getAttribute('data-img-id')
+//     const imgElement = document.getElementById(imgId)
+//     const imageUrl = imgElement.src; 
 
-
-const updateFavoritesDisplay = () => {
-  favoriteImagesContainer.innerHTML = ''; // Clear the current favorites list
-
-  // Loop through the favorites array and display each image
-  favorites.forEach(imageUrl => {
-    const imgElement = document.createElement('li')
-    imgElement.src = imageUrl
-    favoriteImagesContainer.appendChild(imgElement)
-  });
-};
+//     if (!favorites.includes(imageUrl)) {
+//       try {
+//         favorites.push(imageUrl)
+//         await saveFavorite(imageUrl)
+//         updateFavoritesDisplay()
+//       } catch (error) {
+//         alert(error)
+//       }
+//     } else {
+//       alert('This picture is already in your favorites!');
+//     }
+//   });
+// });
 
 
-function displayArtwork(artwork) {
-  // Gets the map-container div
-  const artworkText = document.getElementById("artwork-text");
+// const updateFavoritesDisplay = () => {
+//   favoriteImagesContainer.innerHTML = ''; // Clear the current favorites list
 
-  // Clears any existing content
-  artworkText.innerHTML = "";
-
-  // Populates the div with the random artwork details
-  const title = document.createElement("p");
-  title.textContent = artwork.title;
-
-  const year = document.createElement("p");
-  year.textContent = artwork.date_start;
-
-  const artist = document.createElement("p");
-  artist.textContent = `${artwork.artist_title || "Unknown"}`;
-
-  const dimensions = document.createElement("p");
-  dimensions.textContent = artwork.dimensions;
-
-  const medium = document.createElement("p");
-  medium.textContent = artwork.medium;
-
-  const image = document.createElement("img");
-  image.src = artwork.image_id
-    ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
-    : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
-  image.alt = artwork.title;
-
-  // Appends the elements to the container
-  //! Will have to change where this data is appended once we get to styling!
-  //! Maybe we should validate if all of the data is available before appending! Some are missing details
-  artworkText.appendChild(title);
-  artworkText.appendChild(artist);
-  artworkText.appendChild(year);
-  artworkText.appendChild(dimensions);
-  artworkText.appendChild(medium);
-  artworkText.appendChild(image);
-}
-
-
-document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
-
-
+//   // Loop through the favorites array and display each image
+//   favorites.forEach(imageUrl => {
+//     const imgElement = document.createElement('img');
+//     imgElement.src = imageUrl;
+//     imgElement.alt = 'Favorite Picture';
+//     favoriteImagesContainer.appendChild(imgElement);
+//   });
+// };
