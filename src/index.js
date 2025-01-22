@@ -33,14 +33,58 @@ async function fetchData() {
 console.log(fetchData())
 //!Currently fetches 500 artworks (limit 100 * max pages 5)
 
-
+//! EVENT LISTENERS
 document.getElementById("movement-select").addEventListener("change", handleFilterChange);
 document.getElementById("theme-select").addEventListener("change", handleFilterChange);
 
-let cachedArtworks = [];
+let cachedArtworks = []; // caches artworks to avoid refetching
 
+async function handleFilterChange() {
+  if (cachedArtworks.length === 0) {
+    cachedArtworks = await fetchData(); // fetch data only once
+  }
 
+  const movementSelect = document.getElementById("movement-select");
+  const themeSelect = document.getElementById("theme-select");
 
+  const movementValue = movementSelect.value;
+  const themeValue = themeSelect.value;
+
+  let filteredArtworks = cachedArtworks;
+
+  //! MOVEMENT FILTER
+  if (movementValue) {
+    const [startYear, endYear] = movementValue.split("-").map(Number);
+    filteredArtworks = filteredArtworks.filter(
+      artwork =>
+        artwork.date_start >= startYear && artwork.date_start <= endYear
+    );
+  }
+
+  //! THEME FILTER
+  if (themeValue) {
+    filteredArtworks = filteredArtworks.filter(
+      artwork =>
+        artwork.artist_title &&
+        artwork.artist_title.toLowerCase().includes(themeValue.toLowerCase())
+    );
+  }
+
+  if (filteredArtworks.length === 0) {
+    console.error("No artworks found for the selected filters");
+    displayNoResultsMessage();
+    return;
+  }
+
+  const randomArtwork =
+    filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
+  displayArtwork(randomArtwork);
+}
+
+function displayNoResultsMessage() {
+  const mapContainer = document.getElementById("map-container");
+  mapContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
+}
 
 function displayArtwork(artwork) {
   // Gets the map-container div
@@ -90,4 +134,4 @@ function displayArtwork(artwork) {
 }
 
 
-document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
+document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
