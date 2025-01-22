@@ -8,7 +8,7 @@ const MAX_SUGGESTIONS = 5;
 let debounceTimer;
 let cachedArtworks = []; // caches artworks to avoid refetching
 const artworkText = document.getElementById("artwork-text");
-
+searchSuggestions.style.display = "none";
 
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
@@ -101,7 +101,6 @@ async function handleSearch(event) {
           searchSuggestions.style.display = "none";
           return;
       }
-      
       try {
           // Use cached artworks instead of making an API call
           if (cachedArtworks.length === 0) {
@@ -109,13 +108,13 @@ async function handleSearch(event) {
           }
 
           // Filter cached artworks that start with user input
-          const results = cachedArtworks.filter(artwork => 
-              artwork.title && 
+          const results = cachedArtworks.filter(artwork =>
+              artwork.title &&
               artwork.title.toLowerCase().startsWith(userInput.toLowerCase())
           );
 
           // Sort results alphabetically
-          const sortedResults = results.sort((a, b) => 
+          const sortedResults = results.sort((a, b) =>
               a.title.toLowerCase().localeCompare(b.title.toLowerCase())
           );
 
@@ -134,7 +133,6 @@ function sortResultsByStartsWith(results, searchInput) {
     return results.sort((a, b) => {
         const titleA = a.title.toLowerCase();
         const titleB = b.title.toLowerCase();
-        
         //* check if titles start with search input
         //* for each item its comapred with title a & b
         //* checks if a and b start with userInput
@@ -314,7 +312,7 @@ document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container") &&
       !event.target.closest(".search-right-filters") &&
       !event.target.closest("select")) {
-         searchSuggestions.style.display = "none";
+      
  }
 
 });
