@@ -1,3 +1,6 @@
+let cachedArtworks = []; // caches artworks to avoid refetching
+
+
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
   let artworks = []; //initializes an empty array
@@ -23,6 +26,9 @@ async function fetchData() {
 
       page++;
     }
+    cachedArtworks = artworks
+    displayArtwork(artworks[1]) //displays artwork immediately
+
 
     return artworks;
   } catch (error) {
