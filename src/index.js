@@ -108,11 +108,11 @@ function displayArtwork(artwork) {
   textContainer.classList.add("artwork-details"); // Use the new CSS class
 
   // Populates the div with the random artwork details
-  const title = document.createElement("p");
-  title.textContent = `Title: ${artwork.title || "Unknown"}`;
+  const title = document.createElement("h3");
+  title.textContent = `${artwork.title || "Unknown"}`;
 
-  const artist = document.createElement("p");
-  artist.textContent = `Artist: ${artwork.artist_title || "Unknown"}`;
+  const artist = document.createElement("h4");
+  artist.textContent = `${artwork.artist_title || "Unknown"}`;
 
   const year = document.createElement("p");
   year.textContent = `Year: ${artwork.date_start || "Unknown"}`;
