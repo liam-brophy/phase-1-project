@@ -31,9 +31,9 @@ async function fetchData() {
     return [];
   }
 }
-console.log(fetchData())
-//!Currently fetches 500 artworks (limit 100 * max pages 5)
 
+//!Currently fetches 500 artworks (limit 100 * max pages 5)
+fetchFilteredRandomArtwork()
 
 async function fetchFilteredRandomArtwork() {
   try {
@@ -89,7 +89,7 @@ async function fetchFilteredRandomArtwork() {
 
 
 
-function displayArtwork(artwork) {
+function displayArtwork(artwork) { //todo egg sandwich
   // Gets the map-container div
   const artworkText = document.getElementById("artwork-text");
 
@@ -128,7 +128,7 @@ function displayArtwork(artwork) {
   artworkText.appendChild(medium);
   artworkText.appendChild(image);
 
-
+}
 //? add modal search results
 //add images to search results
 

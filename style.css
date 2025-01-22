@@ -10,8 +10,6 @@ body{
     border: 1px solid black;
     margin: 20px;
     display: flex;
-    justify-content: center;   /*to make sure the art and title is in middle*/
-    align-items: center;
     border-radius: 25px;
 }
 #artwork-text{
@@ -44,13 +42,30 @@ body{
 
 #favorite-button{
     height: 30px;
+    position: relative;
+    left: 95%;
+    top: 90%;
 }
 
-#search-filters {
+select{
+    border-radius: 15px;
+    font-family: "Funnel Display", serif;
+}
+
+input{
+    border-radius: 15px;
+}
+
+#conjure-button{
+    border-radius: 15px;
+    width: auto;
+    font-family: "Funnel Display", serif;
+}
+/* #search-filters {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     margin: 20px;
-}
+} */
 
