@@ -31,17 +31,19 @@ async function fetchData() {
   }
 }
 console.log(fetchData())
-//!Currently fetches 500 artworks (limit 100 * max pages 5)
+//Currently fetches 500 artworks (limit 100 * max pages 5)
+
+let cachedArtworks = []; // caches artworks to avoid refetching
 
 //! EVENT LISTENERS
 document.getElementById("movement-select").addEventListener("change", handleFilterChange);
 document.getElementById("theme-select").addEventListener("change", handleFilterChange);
+document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
 
-let cachedArtworks = []; // caches artworks to avoid refetching
 
 async function handleFilterChange() {
   if (cachedArtworks.length === 0) {
-    cachedArtworks = await fetchData(); // fetch data only once
+    cachedArtworks = await fetchData(); // fetches data only once
   }
 
   const movementSelect = document.getElementById("movement-select");
@@ -134,4 +136,3 @@ function displayArtwork(artwork) {
 }
 
 
-document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
