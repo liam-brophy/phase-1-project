@@ -12,7 +12,7 @@ body{
 #map-container {
     width: 80%;
     height: 100%;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     margin: 20px auto;
     position: relative; /* Allows child elements to use absolute positioning */
     border-radius: 25px;
