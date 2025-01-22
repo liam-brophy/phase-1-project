@@ -7,6 +7,8 @@ let selectedArtwork = null;
 const MAX_SUGGESTIONS = 5;
 let debounceTimer;
 let cachedArtworks = []; // caches artworks to avoid refetching
+const artworkText = document.getElementById("artwork-text");
+
 
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
@@ -204,13 +206,48 @@ async function handleEnterKey(event) {
     }
 }
 
+//! FETCH ARTWORK DETIALS
+async function fetchArtworkDetail(id) {
+  const apiUrl = `https://api.artic.edu/api/v1/artworks/${id}`;
+
+  try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+          throw new Error("Failed to fetch artwork details");
+      }
+
+      const data = await response.json();
+      renderArtworkDetail(data.data);
+  } catch (error) {
+      handleError(error);
+  }
+}
+
+//! RENDER ART DETAILS! (IMG AND TITLE)
+function renderArtworkDetail(artwork) {
+  //*set html of map container to show art and title
+  artworkText.innerHTML = `
+      
+          
+          <img src="https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg"
+               alt="${artwork.title}"
+               />
+               <div class="artwork-details">
+               <p>Title:${artwork.title} </p>
+               <p>Artist: ${artwork.artist}</p>
+               <p>Year: ${artwork.year}</p>
+               <p>Dimensions:${artwork.dimensions}</p>
+               <p>Medium:${artwork.medium || "medium not available"}</p></div>
+  `;
+
+}
 //* CONSULT TEAM ABOUT THIS FEATURE
 //* hides suggs when clicking out of search bar
 
 
 function displayArtwork(artwork) {
   // Gets the map-container div
-  const artworkText = document.getElementById("artwork-text");
+  
 
   // Clears any existing content
   artworkText.innerHTML = "";
