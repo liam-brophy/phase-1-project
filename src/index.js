@@ -8,6 +8,8 @@ const MAX_SUGGESTIONS = 5;
 let debounceTimer;
 let cachedArtworks = []; // caches artworks to avoid refetching
 const artworkText = document.getElementById("artwork-text");
+const themeToggle = document.getElementById("theme-toggle");
+const body = document.body;
 searchSuggestions.style.display = "none";
 
 async function fetchData() {
@@ -43,6 +45,7 @@ async function fetchData() {
     return [];
   }
 }
+
 
 async function handleFilterChange() {
   if (cachedArtworks.length === 0) {
@@ -302,6 +305,28 @@ function displayArtwork(artwork) {
   artworkText.appendChild(textContainer);
 
 }
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+    body.classList.add(savedTheme);
+    themeToggle.textContent = savedTheme === "dark-mode" ? "Switch to Light Mode" : "Switch to Dark Mode";
+    themeToggle.className = savedTheme;
+}
+
+// Toggle theme on button click
+themeToggle.addEventListener("click", () => {
+    if (body.classList.contains("dark-mode")) {
+        body.classList.replace("dark-mode", "light-mode");
+        themeToggle.textContent = "Switch to Dark Mode";
+        themeToggle.className = "light-mode";
+        localStorage.setItem("theme", "light-mode");
+    } else {
+        body.classList.replace("light-mode", "dark-mode");
+        themeToggle.textContent = "Switch to Light Mode";
+        themeToggle.className = "dark-mode";
+        localStorage.setItem("theme", "dark-mode");
+    }
+});
 
 
 //!EVENT LISTENERS

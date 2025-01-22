@@ -6,6 +6,7 @@ body{
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     flex-direction: column; /* text-align: center; */
+    transition: background-color white 0.3s, color 0.3s;
 }
 
 
@@ -113,4 +114,51 @@ input{
 #search-bar{
     padding: 3.5px;
     margin-bottom: 5px;
+}
+
+/* Light Mode */
+body.light-mode {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.light-mode #map-container,
+.light-mode #favorites-container {
+    background-color: #f0f0f0;
+    border-color: #cccccc;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.dark-mode #map-container,
+.dark-mode #favorites-container {
+    background-color: #333333;
+    border-color: #444444;
+}
+
+/* Toggle Button */
+#theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: "Funnel Display", serif;
+    z-index: 1000;
+}
+
+#theme-toggle.light-mode {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+#theme-toggle.dark-mode {
+    background-color: #ffffff;
+    color: #000000;
 }
