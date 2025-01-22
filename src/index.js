@@ -1,3 +1,12 @@
+//! GLOBAL VARIABLES
+
+const searchBar = document.getElementById("search-bar");
+const mapContainer = document.getElementById("map-container");
+const searchSuggestions = document.getElementById("search-suggestions");
+let selectedArtwork = null;
+const MAX_SUGGESTIONS = 5;
+let debounceTimer;
+let cachedArtworks = []; // caches artworks to avoid refetching
 
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
@@ -24,7 +33,8 @@ async function fetchData() {
 
       page++;
     }
-
+    cachedArtworks = artworks
+    displayArtwork(artworks[1]) //displays imm
     return artworks;
   } catch (error) {
     console.error("Error fetching all artworks:", error);
@@ -32,148 +42,73 @@ async function fetchData() {
   }
 }
 
-//!Currently fetches 500 artworks (limit 100 * max pages 5)
-fetchFilteredRandomArtwork()
+async function handleFilterChange() {
+  if (cachedArtworks.length === 0) {
+    cachedArtworks = await fetchData(); // fetch data only once
+  }
 
-async function fetchFilteredRandomArtwork() {
-  try {
-    // fetches all artworks from the API
-    const artworks = await fetchData();
+  const movementSelect = document.getElementById("movement-select");
+  const themeSelect = document.getElementById("theme-select");
 
-    const movementSelect = document.getElementById("movement-select");
-    const selectedValue = movementSelect.value;
+  const movementValue = movementSelect.value;
+  const themeValue = themeSelect.value;
 
-    const themeSelect = document.getElementById("movement-select");
-    const selectedTheme = movementSelect.value;
+  let filteredArtworks = cachedArtworks;
 
-    let filteredArtworks = artworks;
-
-    //!FILTER BY MOVEMENT
-    if (selectedValue) {
-    const [startYear, endYear] = selectedValue.split("-").map(Number);
-    filteredArtworks = artworks.filter(
+  //! MOVEMENT FILTER
+  if (movementValue) {
+    const [startYear, endYear] = movementValue.split("-").map(Number);
+    filteredArtworks = filteredArtworks.filter(
       artwork =>
         artwork.date_start >= startYear && artwork.date_start <= endYear
-      //filters date by range
     );
-    }
-
-    //!FILTER BY THEME
-    if (selectedTheme) {
-      filteredArtworks = filteredArtworks.filter(artwork =>
-        artwork.subject_titles &&
-        artwork.subject_titles.some(subject =>
-          subject.toLowerCase().includes(selectedTheme.toLowerCase())
-        )
-      );
-    }
-
-    if (filteredArtworks.length === 0) {
-      throw new Error("No artworks found for the selected period");
-    }
-
-    // selects a random artwork from the returned array
-    const randomArtwork =
-      filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
-
-    // displays the random artwork details
-    displayArtwork(randomArtwork);
-  } catch (error) {
-    console.error("Error fetching random artwork:", error);
-
-    //
-    const mapContainer = document.getElementById("map-container");
-    mapContainer.innerHTML = `<p>Failed to fetch a random artwork. Please try again later.</p>`;
   }
+
+  //! THEME FILTER
+  if (themeValue) {
+    filteredArtworks = filteredArtworks.filter(
+      artwork =>
+        artwork.artist_title &&
+        artwork.artist_title.toLowerCase().includes(themeValue.toLowerCase())
+    );
+  }
+
+  if (filteredArtworks.length === 0) {
+    console.error("No artworks found for the selected filters");
+    displayNoResultsMessage();
+    return;
+  }
+
+  const randomArtwork =
+    filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
+  displayArtwork(randomArtwork);
 }
 
-
-
-function displayArtwork(artwork) { //todo egg sandwich
-  // Gets the map-container div
-  const artworkText = document.getElementById("artwork-text");
-
-  // Clears any existing content
-  artworkText.innerHTML = "";
-
-  // Populates the div with the random artwork details
-  const title = document.createElement("p");
-  title.textContent = artwork.title;
-
-  const year = document.createElement("p");
-  year.textContent = artwork.date_start;
-
-  const artist = document.createElement("p");
-  artist.textContent = `${artwork.artist_title || "Unknown"}`;
-
-  const dimensions = document.createElement("p");
-  dimensions.textContent = artwork.dimensions;
-
-  const medium = document.createElement("p");
-  medium.textContent = artwork.medium;
-
-  const image = document.createElement("img");
-  image.src = artwork.image_id
-    ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
-    : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
-  image.alt = artwork.title;
-
-  // Appends the elements to the container
-  //! Will have to change where this data is appended once we get to styling!
-  //! Maybe we should validate if all of the data is available before appending! Some are missing details
-  artworkText.appendChild(title);
-  artworkText.appendChild(artist);
-  artworkText.appendChild(year);
-  artworkText.appendChild(dimensions);
-  artworkText.appendChild(medium);
-  artworkText.appendChild(image);
-
+function displayNoResultsMessage() {
+  const mapContainer = document.getElementById("map-container");
+  mapContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
 }
-//? add modal search results
-//add images to search results
-
-console.log()
-//! GLOBAL VARIABLES
-
-const searchBar = document.getElementById("search-bar");
-const mapContainer = document.getElementById("map-container");
-const searchSuggestions = document.getElementById("search-suggestions");
-let selectedArtwork = null;
-const MAX_SUGGESTIONS = 5;
-
-//! EVENT LISTENERS
-searchBar.addEventListener("input", handleSearch);
-searchBar.addEventListener("keydown", handleEnterKey);
-//* avoid spam
-let debounceTimer;
-
-
 
 //!HANDLE SEARCH INPUT
 async function handleSearch(event) {
-    //*take in and trim user input
-    const userInput = event.target.value.trim();
-    //! prevent overloading
-    clearTimeout(debounceTimer);
+  const userInput = event.target.value.trim();
+  clearTimeout(debounceTimer);
 
-    debounceTimer = setTimeout(async () => {
-        //*if userinpout is empty then exit early
-        if (!userInput) {
-            searchSuggestions.style.display = "none";
-            return;
-        }
-        
-        try {  //*if its not empty calls
-            //*fetches search suggs to get matches
-            const results = await fetchSearchSuggestions(userInput);
-            //*results get sorted, prioritizes suggs that start with user input
-            const sortedResults = sortResultsByStartsWith(results, userInput);
-            //*only shows max 5 suggs at a time
-            renderSuggestions(sortedResults.slice(0, MAX_SUGGESTIONS));
-        } catch (error) {
-            handleError(error);
-        }
-    }, 300);
+  debounceTimer = setTimeout(async () => {
+      if (!userInput) {
+          searchSuggestions.style.display = "none";
+          return;
+      }
+      
+      try {
+          const results = await fetchSearchSuggestions(userInput);
+          const sortedResults = sortResultsByStartsWith(results, userInput);
+          renderSuggestions(sortedResults.slice(0, MAX_SUGGESTIONS));
+      } catch (error) {
+          console.error("Search error:", error);
+          searchSuggestions.style.display = "none";
+      }
+  }, 300);
 }
 
 //! HANDLE SEARCH RESULTS WITH USER INPUT
@@ -248,19 +183,21 @@ async function handleEnterKey(event) {
         //*hides suggs
         searchSuggestions.style.display = "none";
         //*if art is already selected fetch info about work
+        
         if (selectedArtwork) {
             await fetchArtworkDetail(selectedArtwork.id);
         } else if (userInput) {
             try { //*if no art selected setch suggs based on the input, prioritize the first results
                 const results = await fetchSearchSuggestions(userInput);
                 const sortedResults = sortResultsByStartsWith(results, userInput);
+                
                 if (sortedResults.length > 0) {
                     await fetchArtworkDetail(sortedResults[0].id);
                 } else { //*if no art found
                     mapContainer.textContent = "No artwork found. Please try a different search.";
                 }
             } catch (error) {
-                handleError(error);
+                displayNoResultsMessage(error);
             }
         }//* reset the selected artwork to null after handling the Enter key
         selectedArtwork = null;
@@ -268,55 +205,71 @@ async function handleEnterKey(event) {
 }
 
 //* CONSULT TEAM ABOUT THIS FEATURE
-//* hides suggs when clicking out of search bar 
+//* hides suggs when clicking out of search bar
+
+
+function displayArtwork(artwork) {
+  // Gets the map-container div
+  const artworkText = document.getElementById("artwork-text");
+
+  // Clears any existing content
+  artworkText.innerHTML = "";
+
+  const image = document.createElement("img");
+  image.src = artwork.image_id
+    ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
+    : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
+  image.alt = artwork.title;
+
+  artworkText.appendChild(image);
+
+  // Create a container for text details
+  const textContainer = document.createElement("div");
+  textContainer.classList.add("artwork-details"); // Use the new CSS class
+
+  // Populates the div with the random artwork details
+  const title = document.createElement("p");
+  title.textContent = `Title: ${artwork.title || "Unknown"}`;
+
+  const artist = document.createElement("p");
+  artist.textContent = `Artist: ${artwork.artist_title || "Unknown"}`;
+
+  const year = document.createElement("p");
+  year.textContent = `Year: ${artwork.date_start || "Unknown"}`;
+
+  const dimensions = document.createElement("p");
+  dimensions.textContent = `Dimensions: ${artwork.dimensions || "Not provided"}`;
+
+  const medium = document.createElement("p");
+  medium.textContent = `Medium: ${artwork.medium || "Not provided"}`;
+
+  // Append details to the container
+  textContainer.appendChild(title);
+  textContainer.appendChild(artist);
+  textContainer.appendChild(year);
+  textContainer.appendChild(dimensions);
+  textContainer.appendChild(medium);
+
+  // Append the text container to artwork-text
+  artworkText.appendChild(textContainer);
+
+}
+
+
+//!EVENT LISTENERS
+document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
+document.getElementById("movement-select").addEventListener("change", handleFilterChange);
+document.getElementById("theme-select").addEventListener("change", handleFilterChange);
 document.addEventListener("click", (event) => {
-     
-     if (!event.target.closest(".search-container") && 
-         !event.target.closest(".search-right-filters") && 
-         !event.target.closest("select")) {
-            searchSuggestions.style.display = "none";
-    }
-    
+  if (!event.target.closest(".search-container") &&
+      !event.target.closest(".search-right-filters") &&
+      !event.target.closest("select")) {
+         searchSuggestions.style.display = "none";
+ }
+
 });
-
-//! FETCH ARTWORK DETIALS
-async function fetchArtworkDetail(id) {
-    const apiUrl = `https://api.artic.edu/api/v1/artworks/${id}`;
-
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error("Failed to fetch artwork details");
-        }
-
-        const data = await response.json();
-        renderArtworkDetail(data.data);
-    } catch (error) {
-        handleError(error);
-    }
-}
-
-//! RENDER ART DETAILS! (IMG AND TITLE)
-function renderArtworkDetail(artwork) {
-    //*set html of map container to show art and title
-    mapContainer.innerHTML = `
-        <div class="artwork-detail">
-            <h2>${artwork.title}</h2>
-            <img src="https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg"
-                 alt="${artwork.title}"
-                 style="max-width: 800px; height: 300px;"></div>
-    `;
-
-}
-//! ERROR HANDLING
-function handleError(error) {
-    console.error("Error:", error);
-    mapContainer.innerHTML = `
-        <p>Something went wrong. Please try again later.</p>
-        <p>Error: ${error.message}</p>
-    `;
-}
+searchBar.addEventListener("input", handleSearch);
+searchBar.addEventListener("keydown", handleEnterKey);
 
 
-
-
+fetchData()
