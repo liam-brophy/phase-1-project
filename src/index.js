@@ -103,8 +103,22 @@ async function handleSearch(event) {
       }
       
       try {
-          const results = await fetchSearchSuggestions(userInput);
-          const sortedResults = sortResultsByStartsWith(results, userInput);
+          // Use cached artworks instead of making an API call
+          if (cachedArtworks.length === 0) {
+              cachedArtworks = await fetchData();
+          }
+
+          // Filter cached artworks that start with user input
+          const results = cachedArtworks.filter(artwork => 
+              artwork.title && 
+              artwork.title.toLowerCase().startsWith(userInput.toLowerCase())
+          );
+
+          // Sort results alphabetically
+          const sortedResults = results.sort((a, b) => 
+              a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+          );
+
           renderSuggestions(sortedResults.slice(0, MAX_SUGGESTIONS));
       } catch (error) {
           console.error("Search error:", error);
@@ -152,58 +166,57 @@ async function fetchSearchSuggestions(userInput) {
 
 //! RENDER SEARCH SUGGS DROP DOWN
 function renderSuggestions(results) {
-    //*clear suggs from drop down
-    searchSuggestions.innerHTML = "";
-    //*check for rssults to display
-    if (results.length > 0) {
-        results.forEach(result => {
-            //*create new div for each sugg
-            const div = document.createElement("div");
-            div.className = "suggestion-item";
-            //*display title
-            div.textContent = result.title;
-            //todo ADD CLICKABLE SUGG
-            div.addEventListener("click", () => {
-                searchBar.value = result.title;
-                selectedArtwork = result;
-                //*hide sug after clicked
-                searchSuggestions.style.display = "none";
-            });
-            searchSuggestions.appendChild(div);
-        });
-        searchSuggestions.style.display = "block";
-    } else { //*if no suggs hide dropdown
-        searchSuggestions.style.display = "none";
-    }
+  searchSuggestions.innerHTML = "";
+  
+  if (results.length > 0) {
+      results.forEach(result => {
+          const div = document.createElement("div");
+          div.className = "suggestion-item";
+          div.textContent = result.title;
+          
+          div.addEventListener("click", () => {
+              searchBar.value = result.title;
+              selectedArtwork = result;
+              searchSuggestions.style.display = "none";
+              displayArtwork(result);  // Display the artwork immediately
+          });
+          
+          searchSuggestions.appendChild(div);
+      });
+      searchSuggestions.style.display = "block";
+  } else {
+      searchSuggestions.style.display = "none";
+      const noResultsDiv = document.createElement("div");
+      noResultsDiv.className = "suggestion-item";
+      noResultsDiv.textContent = "No artworks found starting with '" + searchBar.value + "'";
+      searchSuggestions.appendChild(noResultsDiv);
+      searchSuggestions.style.display = "block";
+  }
 }
+
 
 //!HANDLE ENTER KEY
 async function handleEnterKey(event) {
-    if (event.key === "Enter") {
-        //*clean up user input
-        const userInput = searchBar.value.trim();
-        //*hides suggs
-        searchSuggestions.style.display = "none";
-        //*if art is already selected fetch info about work
-        
-        if (selectedArtwork) {
-            await fetchArtworkDetail(selectedArtwork.id);
-        } else if (userInput) {
-            try { //*if no art selected setch suggs based on the input, prioritize the first results
-                const results = await fetchSearchSuggestions(userInput);
-                const sortedResults = sortResultsByStartsWith(results, userInput);
-                
-                if (sortedResults.length > 0) {
-                    await fetchArtworkDetail(sortedResults[0].id);
-                } else { //*if no art found
-                    mapContainer.textContent = "No artwork found. Please try a different search.";
-                }
-            } catch (error) {
-                displayNoResultsMessage(error);
-            }
-        }//* reset the selected artwork to null after handling the Enter key
-        selectedArtwork = null;
-    }
+  if (event.key === "Enter") {
+      const userInput = searchBar.value.trim();
+      searchSuggestions.style.display = "none";
+
+      if (selectedArtwork) {
+          displayArtwork(selectedArtwork);
+      } else if (userInput) {
+          const results = cachedArtworks.filter(artwork => 
+              artwork.title && 
+              artwork.title.toLowerCase().startsWith(userInput.toLowerCase())
+          );
+
+          if (results.length > 0) {
+              displayArtwork(results[0]);
+          } else {
+              displayNoResultsMessage();
+          }
+      }
+      selectedArtwork = null;
+  }
 }
 
 //! FETCH ARTWORK DETIALS
