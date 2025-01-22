@@ -1,20 +1,22 @@
 
 
-//API function Data
-
-//API function Data
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
-  let artworks = [];
+  let artworks = []; //initializes an empty array
   let page = 1; // starts at the first page
   const limit = 100; // number of results per page
   const maxPages = 5; // fetches up to 5 pages (adjust as needed)
 
   try {
-    while (page <= maxPages) {
+    while (page <= maxPages) { //increment only while there still are pages
+      //?page=${page} adds a query parameter specifying which page of results to fetch.
+      //&limit=${limit} specifies the number of items per page.
       const response = await fetch(`${apiUrl}?page=${page}&limit=${limit}`);
       const data = await response.json();
 
+      //!validation
+      //data.data means the parsed data object has a property called data!
+      //array.isArray is ensuring that data.data IS an array
       if (data.data && Array.isArray(data.data)) {
         artworks = artworks.concat(data.data);
       } else {
@@ -30,60 +32,123 @@ async function fetchData() {
     return [];
   }
 }
-// console.log(fetchData())
+console.log(fetchData())
 //!Currently fetches 500 artworks (limit 100 * max pages 5)
 
+//! EVENT LISTENERS
+document.getElementById("movement-select").addEventListener("change", handleFilterChange);
+document.getElementById("theme-select").addEventListener("change", handleFilterChange);
 
-async function fetchFilteredRandomArtwork() {
-  try {
-    // fetches all artworks from the API
-    const artworks = await fetchData();
+let cachedArtworks = []; // caches artworks to avoid refetching
 
-    const movementSelect = document.getElementById("movement-select");
-    const selectedValue = movementSelect.value;
+async function handleFilterChange() {
+  if (cachedArtworks.length === 0) {
+    cachedArtworks = await fetchData(); // fetch data only once
+  }
 
-    let filteredArtworks;
+  const movementSelect = document.getElementById("movement-select");
+  const themeSelect = document.getElementById("theme-select");
 
-    if (selectedValue) {
-    const [startYear, endYear] = selectedValue.split("-").map(Number);
-    filteredArtworks = artworks.filter(
+  const movementValue = movementSelect.value;
+  const themeValue = themeSelect.value;
+
+  let filteredArtworks = cachedArtworks;
+
+  //! MOVEMENT FILTER
+  if (movementValue) {
+    const [startYear, endYear] = movementValue.split("-").map(Number);
+    filteredArtworks = filteredArtworks.filter(
       artwork =>
         artwork.date_start >= startYear && artwork.date_start <= endYear
-      //filters date by range
     );
-    }else {
-      // if no movement is selected, use the full dataset
-      filteredArtworks = artworks;
-    }
-
-    if (filteredArtworks.length === 0) {
-      throw new Error("No artworks found for the selected period");
-    }
-
-    // selects a random artwork from the returned array
-    const randomArtwork =
-      filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
-
-    // displays the random artwork details
-    displayArtwork(randomArtwork);
-  } catch (error) {
-    console.error("Error fetching random artwork:", error);
-
-    //
-    const mapContainer = document.getElementById("map-container");
-    mapContainer.innerHTML = `<p>Failed to fetch a random artwork. Please try again later.</p>`;
   }
+
+  //! THEME FILTER
+  if (themeValue) {
+    filteredArtworks = filteredArtworks.filter(
+      artwork =>
+        artwork.artist_title &&
+        artwork.artist_title.toLowerCase().includes(themeValue.toLowerCase())
+    );
+  }
+
+  if (filteredArtworks.length === 0) {
+    console.error("No artworks found for the selected filters");
+    displayNoResultsMessage();
+    return;
+  }
+
+  const randomArtwork =
+    filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
+  displayArtwork(randomArtwork);
 }
 
-fetchFilteredRandomArtwork();
+function displayNoResultsMessage() {
+  const mapContainer = document.getElementById("map-container");
+  mapContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
+}
+
+function displayArtwork(artwork) {
+  // Gets the map-container div
+  const artworkText = document.getElementById("artwork-text");
+
+  // Clears any existing content
+  artworkText.innerHTML = "";
+
+  const image = document.createElement("img");
+  image.src = artwork.image_id
+    ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
+    : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
+  image.alt = artwork.title;
+
+  artworkText.appendChild(image);
+
+  // Create a container for text details
+  const textContainer = document.createElement("div");
+  textContainer.classList.add("artwork-details"); // Use the new CSS class
+
+  // Populates the div with the random artwork details
+  const title = document.createElement("p");
+  title.textContent = `Title: ${artwork.title || "Unknown"}`;
+
+  const artist = document.createElement("p");
+  artist.textContent = `Artist: ${artwork.artist_title || "Unknown"}`;
+
+  const year = document.createElement("p");
+  year.textContent = `Year: ${artwork.date_start || "Unknown"}`;
+
+  const dimensions = document.createElement("p");
+  dimensions.textContent = `Dimensions: ${artwork.dimensions || "Not provided"}`;
+
+  const medium = document.createElement("p");
+  medium.textContent = `Medium: ${artwork.medium || "Not provided"}`;
+
+  // Append details to the container
+  textContainer.appendChild(title);
+  textContainer.appendChild(artist);
+  textContainer.appendChild(year);
+  textContainer.appendChild(dimensions);
+  textContainer.appendChild(medium);
+
+  // Append the text container to artwork-text
+  artworkText.appendChild(textContainer);
+
+}
+
+
+document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
+
+
+
+
 
 
 // Creating a Favorites list
 let favorites = [];
 
 function createFavorites(e) {
-  //Get class name to retrieve art pieces to save for list
-  const favoriteList = document.getElementsById("");
+  //Get id name to retrieve art pieces to save for list
+  const favoriteList = document.getElementsById("favorites-list");
   favoriteList.innerText = ''
 
   favorites.forEach(favoritesList => {
@@ -94,13 +159,12 @@ function createFavorites(e) {
 }
 
 //Click Event Listener for Favorites Button
-const favButton = document.getElementById('fav-button')
+const favButton = document.getElementById('favorite-button')
 
 //!!Will need adjusting depending on names of code for image grabs!!
 function favClick(e) {
-  const imgId = e.target.getAttribute('data-img-id')
+  const imgId = e.target.getAttribute('artwork-text')
   const imgElement = document.getElementById(imgId)
-  const imageUrl = imgElement.src
   alert("Favorite Button Clicked")
 }
 
@@ -127,17 +191,16 @@ document.querySelectorAll('fav-button').forEach(button => {
 });
 
 
-// const updateFavoritesDisplay = () => {
-//   favoriteImagesContainer.innerHTML = ''; // Clear the current favorites list
+const updateFavoritesDisplay = () => {
+  favoriteImagesContainer.innerHTML = ''; // Clear the current favorites list
 
-//   // Loop through the favorites array and display each image
-//   favorites.forEach(imageUrl => {
-//     const imgElement = document.createElement('img');
-//     imgElement.src = imageUrl;
-//     imgElement.alt = 'Favorite Picture';
-//     favoriteImagesContainer.appendChild(imgElement);
-//   });
-// };
+  // Loop through the favorites array and display each image
+  favorites.forEach(imageUrl => {
+    const imgElement = document.createElement('li')
+    imgElement.src = imageUrl
+    favoriteImagesContainer.appendChild(imgElement)
+  });
+};
 
 
 function displayArtwork(artwork) {
@@ -182,3 +245,5 @@ function displayArtwork(artwork) {
 
 
 document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
+
+
