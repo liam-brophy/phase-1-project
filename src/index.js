@@ -237,7 +237,7 @@ function renderArtworkDetail(artwork) {
                <p>Artist: ${artwork.artist}</p>
                <p>Year: ${artwork.year}</p>
                <p>Dimensions:${artwork.dimensions}</p>
-               <p>Medium:${artwork.medium || "medium not available"}</p></div>
+               <p>Medium:${artwork.medium || "Not provided"}</p></div>
   `;
 
 }
