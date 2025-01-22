@@ -34,57 +34,11 @@ console.log(fetchData())
 //!Currently fetches 500 artworks (limit 100 * max pages 5)
 
 
-async function fetchFilteredRandomArtwork() {
-  try {
-    // fetches all artworks from the API
-    const artworks = await fetchData();
+document.getElementById("movement-select").addEventListener("change", handleFilterChange);
+document.getElementById("theme-select").addEventListener("change", handleFilterChange);
 
-    const movementSelect = document.getElementById("movement-select");
-    const selectedValue = movementSelect.value;
+let cachedArtworks = [];
 
-    const themeSelect = document.getElementById("movement-select");
-    const selectedTheme = movementSelect.value;
-
-    let filteredArtworks = artworks;
-
-    //!FILTER BY MOVEMENT
-    if (selectedValue) {
-    const [startYear, endYear] = selectedValue.split("-").map(Number);
-    filteredArtworks = artworks.filter(
-      artwork =>
-        artwork.date_start >= startYear && artwork.date_start <= endYear
-      //filters date by range
-    );
-    }
-
-    //!FILTER BY THEME
-    if (selectedTheme) {
-      filteredArtworks = filteredArtworks.filter(artwork =>
-        artwork.subject_titles &&
-        artwork.subject_titles.some(subject =>
-          subject.toLowerCase().includes(selectedTheme.toLowerCase())
-        )
-      );
-    }
-
-    if (filteredArtworks.length === 0) {
-      throw new Error("No artworks found for the selected period");
-    }
-
-    // selects a random artwork from the returned array
-    const randomArtwork =
-      filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
-
-    // displays the random artwork details
-    displayArtwork(randomArtwork);
-  } catch (error) {
-    console.error("Error fetching random artwork:", error);
-
-    //
-    const mapContainer = document.getElementById("map-container");
-    mapContainer.innerHTML = `<p>Failed to fetch a random artwork. Please try again later.</p>`;
-  }
-}
 
 
 
