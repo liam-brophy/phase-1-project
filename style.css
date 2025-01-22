@@ -111,5 +111,6 @@ input{
 }
 
 #search-bar{
+    padding: 3.5px;
     margin-bottom: 5px;
 }
