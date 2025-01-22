@@ -118,6 +118,11 @@ input{
     margin-bottom: 15px;
     cursor: pointer;
 }
+.suggestion-item:hover{
+    font-weight: bolder;
+    font-size: large;
+
+}
 
 #search-bar{
     padding: 3.5px;
