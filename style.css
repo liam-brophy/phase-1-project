@@ -102,3 +102,14 @@ input{
     margin: 20px;
 } */
 
+.search-suggestions{
+    color: white;
+    background-color: rgba(0, 0, 0, 0.648);
+    border-radius: 5px;
+    padding: 2%;
+    margin-bottom: 15px;
+}
+
+#search-bar{
+    margin-bottom: 5px;
+}
