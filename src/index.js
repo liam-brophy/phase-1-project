@@ -233,7 +233,7 @@ function renderArtworkDetail(artwork) {
                alt="${artwork.title}"
                />
                <div class="artwork-details">
-               <p>Title:${artwork.title} </p>
+               <p>Title: ${artwork.title} </p>
                <p>Artist: ${artwork.artist}</p>
                <p>Year: ${artwork.year}</p>
                <p>Dimensions:${artwork.dimensions}</p>
