@@ -258,28 +258,13 @@ function displayArtwork(artwork) {
   // Clears any existing content
   artworkText.innerHTML = "";
 
-  const existingRipple = mapContainer.querySelector(".ripple");
-  if (existingRipple) {
-      existingRipple.remove(); // Remove the previous ripple if present
-  }
-
-  const ripple = document.createElement("div");
-  ripple.classList.add("ripple");
-
-  // Append the ripple to map-container
-  mapContainer.appendChild(ripple);
-
-
   const image = document.createElement("img");
   image.src = artwork.image_id
     ? `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`
     : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
   image.alt = artwork.title;
 
-  // Append the image to the container with a slight delay
-  setTimeout(() => {
-    artworkText.appendChild(image);
-  }, 100); // Delay to ensure ripple shows up
+  artworkText.appendChild(image);
 
   // Create a container for text details
   const textContainer = document.createElement("div");
