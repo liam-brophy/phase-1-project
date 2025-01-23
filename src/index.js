@@ -8,6 +8,9 @@ const MAX_SUGGESTIONS = 5;
 let debounceTimer;
 let cachedArtworks = []; // caches artworks to avoid refetching
 const artworkText = document.getElementById("artwork-text");
+const themeToggle = document.getElementById("theme-toggle");
+const body = document.body;
+searchSuggestions.style.display = "none";
 
 
 
@@ -54,10 +57,8 @@ async function handleFilterChange() {
   }
 
   const movementSelect = document.getElementById("movement-select");
-  const themeSelect = document.getElementById("theme-select");
 
   const movementValue = movementSelect.value;
-  const themeValue = themeSelect.value;
 
   let filteredArtworks = cachedArtworks;
 
