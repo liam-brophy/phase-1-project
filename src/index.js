@@ -326,28 +326,6 @@ fetchData()
 // Creating a Favorites list
 let favorites = [];
 
-//Not going to be used right now
-// function createFavorites() {
-//   //Get class name to retrieve art pieces to save for list
-//   const favoriteList = document.getElementById("favorites-list");
-//   favoriteList.innerHTML = ''
-
-//   favorites.forEach(favoriteArt => {
-//     const listArt = document.createElement('li')
-//     listArt.textContext = `Art Piece: ${favoriteArt.title}`
-//     //Removing a favorited art piece
-//     const removeButton = document.createElement('button')
-//     removeButton.textContent = 'Remove'
-//     removeButton.addEventListener('click', () => removeFavorite(index))
-    
-
-//     favoriteList.appendChild(listArt)
-//   });
-// }
-
-
-//!Tasks to acomplish: Stop code from duplicating images and be able to remove a favorite
-
 
 //Click Event Listener for Favorites Button
 const favButton = document.getElementById('favorite-button')
@@ -371,79 +349,7 @@ function favClick() {
     };
 }
 
-//Attempting to toggle the favorite button to add and remove favorites
-function toggleFavorite() {
-  const button = document.querySelector("#favorite-button")
-  const image = document.querySelector("#artwork")
-  const favoriteList = document.querySelector("#favorite-list")
-  const existingFavorite = favoriteList.querySelector("img")
-  if (existingFavorite) {
-    favoriteList.removeChild(existingFavorite)
-  } else {
-    const copyImage = image.cloneNode(true)
-    favoriteList.appendChild(copyImage)
-  }
-}
 
-
-// if (FavButton.disabled = true)
-
-// if (favoriteList.querySelector('img').slice){
-  //     console.log("This art piece is already favorited!")
-//     return;
-// }
-
-// Click button to REMOVE a favorited art piece
-// // !!!!WHAT AM I CLICKING TO REMOVE IT?!!!
-// function removeClick() {
-//   const image = document.querySelector("#artwork-text img")
-//   if (favoriteList = document.querySelector("artwork-text img") = true)
-//     favoriteList.removeChild(copyImage)
-// }
 
 //Callback is a function passed as an argumnent to another function whose exicution will be delayed in time
 favButton.addEventListener('click', favClick)
-//This code is in hopes of using it to remove favorites. Doesn't currently work.
-//Working towards trying to toggle the favorite button function.
-// favButton.addEventListener('click', removeClick)
-
-
-
-
-//!!! IGNORE THIS CODE !!! NOT BEING USED !!!
-// // document.querySelectorAll('fav-button').forEach(button => {
-//   button.addEventListener('click', async (event) => {
-//     const imgId = event.target.getAttribute('data-img-id')
-//     const imgElement = document.getElementById(imgId)
-//     const imageUrl = imgElement.src; 
-
-//     if (!favorites.includes(imageUrl)) {
-//       try {
-//         favorites.push(imageUrl)
-//         await saveFavorite(imageUrl)
-//         updateFavoritesDisplay()
-//       } catch (error) {
-//         alert(error)
-//       }
-//     } else {
-//       alert('This picture is already in your favorites!');
-//     }
-//   });
-// });
-
-
-// const updateFavoritesDisplay = () => {
-//   favoriteImagesContainer.innerHTML = ''; // Clear the current favorites list
-
-//   // Loop through the favorites array and display each image
-//   favorites.forEach(imageUrl => {
-//     const imgElement = document.createElement('img');
-//     imgElement.src = imageUrl;
-//     imgElement.alt = 'Favorite Picture';
-//     favoriteImagesContainer.appendChild(imgElement);
-//   });
-// };
-
-
-
-
