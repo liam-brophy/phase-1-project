@@ -12,8 +12,7 @@ body {
 
 #map-container {
     width: 80%;
-    height: 100%;
-    border: 1px solid black;
+    height: 80%;
     margin: 20px auto;
     position: relative;
     border-radius: 25px;
@@ -21,18 +20,29 @@ body {
 }
 
 #artwork-text {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    opacity: 0%;
-    transition: opacity 3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 90vw; /* Maximum width as a percentage of the viewport width */
+    max-height: 90vh; /* Maximum height as a percentage of the viewport height */
+    overflow: hidden; /* Ensures no content overflows */
+    /* background-color: white; Optional: A background to distinguish the container */
+    border: 1px solid black; /* Optional: A border to define the container */
+    border-radius: 10px; /* Optional: Add rounded corners */
 }
 
 #artwork-text.fade-in {
-    opacity: 1; /* Fully visible */
-}
+    opacity: 1;  
+} 
 
 #artwork-text img {
+
+    max-width: 100%; /* Image width scales within the container */
+    max-height: 100%; /* Image height scales within the container */
+    object-fit: contain; /* Ensures the image is scaled proportionally */
+    display: block; /* Removes extra space below inline images */
+    aspect-ratio: auto; /* Adapts to the image's natural aspect ratio */
     width: 100%;
     height: 100%;
     z-index: 1;
@@ -51,7 +61,7 @@ body {
     /* Aligns the text block to the left of the image */
     z-index: 2;
     /* Ensures the text is above the image */
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.3);
     /* Semi-transparent background for readability */
     color: white;
     /* White text for contrast */
