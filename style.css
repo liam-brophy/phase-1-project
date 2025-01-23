@@ -10,7 +10,7 @@ body{
 
 
 #map-container {
-    width: 80%;
+    width: 70%;
     height: 100%;
     border: 1px solid black;
     margin: 20px auto;
@@ -58,8 +58,10 @@ body{
     width: 80%;
     height: 200px;
     border: 1px solid black;
-    margin: 20px;
-    border-radius: 25px;
+    margin: 5px;
+    border-radius: 15px;
+    position: relative; /* Allows child elements to use absolute positioning */
+    overflow: hidden; /* Ensures content doesn't overflow the container */
 }
 
 #header{
@@ -82,11 +84,14 @@ body{
 
 #favorites-list{
     display: flex;
-    height: 250px;
+    height: 150px;
 }
+
 #favorites-list img {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    margin: 5px;
 }
 
 select{
