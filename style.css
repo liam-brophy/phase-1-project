@@ -6,7 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: white;
+    /* background-color: white; */
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -20,6 +20,7 @@ body {
 }
 
 #artwork-text {
+    border-radius: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,7 +29,7 @@ body {
     max-height: 90vh; /* Maximum height as a percentage of the viewport height */
     overflow: hidden; /* Ensures no content overflows */
     /* background-color: white; Optional: A background to distinguish the container */
-    border: 1px solid black; /* Optional: A border to define the container */
+    /* border: 1px solid black; Optional: A border to define the container */
     border-radius: 10px; /* Optional: Add rounded corners */
 }
 
@@ -37,7 +38,7 @@ body {
 } 
 
 #artwork-text img {
-
+    border-radius: 10px
     max-width: 100%; /* Image width scales within the container */
     max-height: 100%; /* Image height scales within the container */
     object-fit: contain; /* Ensures the image is scaled proportionally */
@@ -158,11 +159,11 @@ body.light-mode {
     color: #000000;
 }
 
-.light-mode #map-container,
+/* .light-mode #map-container,
 .light-mode #favorites-container {
     background-color: #f0f0f0;
     border-color: #cccccc;
-}
+} */
 
 /* Dark Mode */
 body.dark-mode {
@@ -170,11 +171,11 @@ body.dark-mode {
     color: #ffffff;
 }
 
-.dark-mode #map-container,
+/* .dark-mode #map-container,
 .dark-mode #favorites-container {
     background-color: #333333;
     border-color: #444444;
-}
+} */
 
 /* Toggle Button */
 #theme-toggle {
