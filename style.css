@@ -120,15 +120,27 @@ select {
     font-family: "Funnel Display", serif;
 }
 
-input {
+input{
     border-radius: 15px;
 }
 
-#conjure-button {
+.gradient-hover-effect {
+    display: flex;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #69b7eb, #b3dbd3, #f4d6db);
+    font-family: inherit;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 1s;
+    place-content: center;
     border-radius: 15px;
-    width: auto;
-    font-family: "Funnel Display", serif;
-}
+  }
+.gradient-hover-effect:hover {
+    background: linear-gradient(90deg, #aea4e3, #d3ffe8);
+    background-color: #ffffff;
+    color: #000000;
+  }
+
 
 /* #search-filters {
     display: flex;
@@ -204,3 +216,4 @@ body.dark-mode {
     background-color: #ffffff;
     color: #000000;
 }
+
