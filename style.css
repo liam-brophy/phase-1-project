@@ -38,7 +38,7 @@ body {
 } 
 
 #artwork-text img {
-    border-radius: 10px
+    border-radius: 10px;
     max-width: 100%; /* Image width scales within the container */
     max-height: 100%; /* Image height scales within the container */
     object-fit: contain; /* Ensures the image is scaled proportionally */
