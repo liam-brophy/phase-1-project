@@ -327,23 +327,23 @@ fetchData()
 let favorites = [];
 
 //Not going to be used right now
-function createFavorites() {
-  //Get class name to retrieve art pieces to save for list
-  const favoriteList = document.getElementById("favorites-list");
-  favoriteList.innerHTML = ''
+// function createFavorites() {
+//   //Get class name to retrieve art pieces to save for list
+//   const favoriteList = document.getElementById("favorites-list");
+//   favoriteList.innerHTML = ''
 
-  favorites.forEach(favoriteArt => {
-    const listArt = document.createElement('li')
-    listArt.textContext = `Art Piece: ${favoriteArt.title}`
-    //Removing a favorited art piece
-    const removeButton = document.createElement('button')
-    removeButton.textContent = 'Remove'
-    removeButton.addEventListener('click', () => removeFavorite(index))
+//   favorites.forEach(favoriteArt => {
+//     const listArt = document.createElement('li')
+//     listArt.textContext = `Art Piece: ${favoriteArt.title}`
+//     //Removing a favorited art piece
+//     const removeButton = document.createElement('button')
+//     removeButton.textContent = 'Remove'
+//     removeButton.addEventListener('click', () => removeFavorite(index))
     
 
-    favoriteList.appendChild(listArt)
-  });
-}
+//     favoriteList.appendChild(listArt)
+//   });
+// }
 
 
 //!Tasks to acomplish: Stop code from duplicating images and be able to remove a favorite
@@ -355,16 +355,20 @@ const favoriteList = document.getElementById("favorites-list")
 
 
 //Click button being used for Favorites!
+//Adds and removes a favorite and limits to only 1
 function favClick() {
   const image = document.querySelector("#artwork-text img")
-  const copyImage = image.cloneNode(true)
-  favoriteList.appendChild(copyImage)
-  //Trying to limit a clone to a max of 1
-  // if (favoriteList.querySelector('copyImage') === image){
-  //   copyImage.slice(index, 1)
-  //   console.log("This art piece is already favorited!")
-  //   return;
-  // }
+    if (!favorites.includes(image.src)){
+      const copyImage = image.cloneNode(true)
+      copyImage.addEventListener('click', function(){
+        copyImage.remove()
+        favorites = favorites.filter(function(favoritedImg){
+          return favoritedImg !== copyImage.src
+        })
+      });
+      favoriteList.appendChild(copyImage)
+      favorites.push(image.src)
+    };
 }
 
 //Attempting to toggle the favorite button to add and remove favorites
@@ -375,11 +379,9 @@ function toggleFavorite() {
   const existingFavorite = favoriteList.querySelector("img")
   if (existingFavorite) {
     favoriteList.removeChild(existingFavorite)
-    button.textContent = "Favorite"
   } else {
     const copyImage = image.cloneNode(true)
     favoriteList.appendChild(copyImage)
-    button.textContent = "Unfavorite"
   }
 }
 
