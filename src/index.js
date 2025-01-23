@@ -50,7 +50,7 @@ async function fetchData() {
     return [];
   }
 }
-
+console.log(fetchData());
 
 async function handleFilterChange() {
   if (cachedArtworks.length === 0) {
@@ -255,8 +255,11 @@ function renderArtworkDetail(artwork) {
 
 
 function displayArtwork(artwork) {
-  // Clears any existing content
-  artworkText.innerHTML = "";
+
+  const artworkText = document.getElementById("artwork-text");
+  artworkText.innerHTML = "";// Clears any existing content
+  artworkText.classList.remove("fade-in");
+
 
   const image = document.createElement("img");
   image.src = artwork.image_id
@@ -295,6 +298,10 @@ function displayArtwork(artwork) {
 
   // Append the text container to artwork-text
   artworkText.appendChild(textContainer);
+
+  setTimeout(() => {
+    artworkText.classList.add("fade-in");
+  }, 50); // Delay to trigger the animation
 
 }
 
