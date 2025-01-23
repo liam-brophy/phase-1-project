@@ -210,8 +210,13 @@ async function handleEnterKey(event) {
               artwork.title.toLowerCase().startsWith(userInput.toLowerCase())
           );
 
-          if (results.length > 0) {
-              displayArtwork(results[0]);
+          // Sort results to get the first suggestion
+          const sortedResults = results.sort((a, b) =>
+              a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+          );
+
+          if (sortedResults.length > 0) {
+              displayArtwork(sortedResults[0]);
           } else {
               displayNoResultsMessage();
           }
@@ -306,27 +311,24 @@ function displayArtwork(artwork) {
 
 }
 
+
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme) {
     body.classList.add(savedTheme);
-    themeToggle.textContent = savedTheme === "dark-mode" ? "Switch to Light Mode" : "Switch to Dark Mode";
-    themeToggle.className = savedTheme;
+    themeToggle.classList.add(savedTheme)
 }
 
-// Toggle theme on button click
-themeToggle.addEventListener("click", () => {
-    if (body.classList.contains("dark-mode")) {
-        body.classList.replace("dark-mode", "light-mode");
-        themeToggle.textContent = "Switch to Dark Mode";
-        themeToggle.className = "light-mode";
-        localStorage.setItem("theme", "light-mode");
-    } else {
-        body.classList.replace("light-mode", "dark-mode");
-        themeToggle.textContent = "Switch to Light Mode";
-        themeToggle.className = "dark-mode";
-        localStorage.setItem("theme", "dark-mode");
-    }
-});
+
+
+//* Toggle theme on button click
+
+
+//* Update the saved theme check
+
+if (savedTheme) {
+  body.classList.add(savedTheme);
+  themeToggle.classList.add(savedTheme);
+}
 
 // Creating a Favorites list
 // let favorites = [];
@@ -358,6 +360,17 @@ themeToggle.addEventListener("click", () => {
 
 
 //!EVENT LISTENERS
+themeToggle.addEventListener("click", () => {
+  if (body.classList.contains("dark-mode")) {
+      body.classList.replace("dark-mode", "light-mode");
+      themeToggle.classList.replace("dark-mode", "light-mode");
+      localStorage.setItem("theme", "light-mode");
+  } else {
+      body.classList.replace("light-mode", "dark-mode");
+      themeToggle.classList.replace("light-mode", "dark-mode");
+      localStorage.setItem("theme", "dark-mode");
+  }
+});
 document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
 document.getElementById("movement-select").addEventListener("change", handleFilterChange);
 
