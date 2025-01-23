@@ -42,6 +42,9 @@ async function fetchData() {
       page++;
     }
     cachedArtworks = artworks
+
+
+    
     displayArtwork(artworks[1]) //displays immiate
     return artworks;
   } catch (error) {
