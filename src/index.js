@@ -14,8 +14,6 @@ searchSuggestions.style.display = "none";
 
 
 
-searchSuggestions.style.display = "none";
-
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
   let artworks = []; //initializes an empty array
@@ -257,11 +255,20 @@ function renderArtworkDetail(artwork) {
 
 
 function displayArtwork(artwork) {
-  // Gets the map-container div
-  
-
   // Clears any existing content
   artworkText.innerHTML = "";
+
+  const existingRipple = mapContainer.querySelector(".ripple");
+  if (existingRipple) {
+      existingRipple.remove(); // Remove the previous ripple if present
+  }
+
+  const ripple = document.createElement("div");
+  ripple.classList.add("ripple");
+
+  // Append the ripple to map-container
+  mapContainer.appendChild(ripple);
+
 
   const image = document.createElement("img");
   image.src = artwork.image_id
@@ -269,7 +276,10 @@ function displayArtwork(artwork) {
     : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
   image.alt = artwork.title;
 
-  artworkText.appendChild(image);
+  // Append the image to the container with a slight delay
+  setTimeout(() => {
+    artworkText.appendChild(image);
+  }, 100); // Delay to ensure ripple shows up
 
   // Create a container for text details
   const textContainer = document.createElement("div");
