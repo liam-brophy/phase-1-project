@@ -10,6 +10,11 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+#search-bar-div{
+    display: flex;
+    justify-content: center;
+}
+
 #map-container {
     width: 80%;
     height: 80%;
