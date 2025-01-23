@@ -328,11 +328,39 @@ themeToggle.addEventListener("click", () => {
     }
 });
 
+// Creating a Favorites list
+// let favorites = [];
+
+// //Not going to be used right now
+// function createFavorites() {
+//   //Get class name to retrieve art pieces to save for list
+//   const favoriteList = document.getElementById("favorites-list");
+//   favoriteList.innerHTML = ''
+
+//   favorites.forEach(favoriteArt => {
+//     const listArt = document.createElement('li')
+//     listArt.textContext = `Art Piece: ${favoriteArt.title}`
+//     favoriteList.appendChild(listArt)
+//   });
+// }
+
+// //Click Event Listener for Favorites Button
+// const favButton = document.getElementById('favorite-button')
+// const favoriteList = document.getElementById("favorites-list")
+
+// //Click button being used for Favorites!
+// function favClick() {
+//   const image = document.querySelector("#artwork-text img")
+//   const copyImage = image.cloneNode(true)
+//   favoriteList.appendChild(copyImage)
+// }
+// //Callback is a function passed as an argumnent to another function whose exicution will be delayed in time
+
 
 //!EVENT LISTENERS
 document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
 document.getElementById("movement-select").addEventListener("change", handleFilterChange);
-document.getElementById("theme-select").addEventListener("change", handleFilterChange);
+
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container") &&
       !event.target.closest(".search-right-filters") &&
@@ -343,6 +371,7 @@ document.addEventListener("click", (event) => {
 });
 searchBar.addEventListener("input", handleSearch);
 searchBar.addEventListener("keydown", handleEnterKey);
+// favButton.addEventListener('click', favClick)
 
 
 fetchData()

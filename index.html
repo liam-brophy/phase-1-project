@@ -20,7 +20,11 @@
 
     <div id="header">B & L & K Project 1</div>
 
-    <button id="theme-toggle">Switch to Dark Mode</button>
+    <div id="theme-toggle" class="toggle">
+        <span class="icon moon"><i class="fas fa-moon"></i></span>
+        <span class="icon sun"><i class="fas fa-sun"></i></span>
+        <div class="toggle-ball"></div>
+      </div>
     
     <div id="search-filters">
         <!-- This is the search -->
@@ -47,10 +51,10 @@
                 <option value="1950-2025">Contemporary Art (1950–Present)</option>
             </select>
             <!-- This is the Medium Select -->
-            <label for="themes">Themes</label>
+            
             <select name="themes" id="theme-select">
-                <option value="">Select Theme</option>
-                <option value="women">Women Artists</option>
+                
+                
             </select>
     
         </div>
@@ -60,13 +64,13 @@
              <div id="artwork-text">
              </div>
             <!-- FAVORITE BUTTON  -->
-            <input type="button" name="favorite" id="favorite-button"/>
-        </div>
+
     
-        </div>
+         </div>
         <h4>Favorites</h4>
+
         <div id="favorites-container">
-            <!-- This is where relevant facts and other info from the API will appear! -->
+            <!-- This is where relevant facts and other info from the API will appear!
         </div>
     
     
