@@ -36,19 +36,21 @@ body{
     left: 0;
 }
 
+
 #artwork-text .artwork-details {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
-    z-index: 2;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 5px;
-    border-radius: 10px;
-    max-width: 90%;
-    font-size: 14px;
+    bottom: 10px; /* Aligns the text block near the bottom of the image */
+    left: 10px; /* Aligns the text block to the left of the image */
+    z-index: 2; /* Ensures the text is above the image */
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background for readability */
+    color: white; /* White text for contrast */
+    padding: 5px; /* Padding inside the text box */
+    border-radius: 10px; /* Rounded corners for the text box */
+    max-width: 90%; /* Prevents the text from being too wide */
+    font-size: 12px; /* Adjust text size */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Stacks text items vertically */
+    line-height: 0;
 }
 
 #search-filters{
