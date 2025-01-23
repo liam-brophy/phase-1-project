@@ -250,15 +250,13 @@ function renderArtworkDetail(artwork) {
   `;
 
 }
-//* CONSULT TEAM ABOUT THIS FEATURE
-//* hides suggs when clicking out of search bar
 
 
 function displayArtwork(artwork) {
 
   const artworkText = document.getElementById("artwork-text");
   artworkText.innerHTML = "";// Clears any existing content
-  artworkText.classList.remove("fade-in");
+
 
 
   const image = document.createElement("img");
