@@ -242,11 +242,11 @@ function renderArtworkDetail(artwork) {
                alt="${artwork.title}"
                />
                <div class="artwork-details">
-               <p>Title: ${artwork.title} </p>
-               <p>Artist: ${artwork.artist}</p>
-               <p>Year: ${artwork.year}</p>
-               <p>Dimensions:${artwork.dimensions}</p>
-               <p>Medium:${artwork.medium || "Not provided"}</p></div>
+               <h3>${artwork.title || "Unknown"} </h3>
+               <h4>${artwork.artist || "Unknown"}</h4>
+               <p>${artwork.year|| "Not provided"}</p>
+               <p>${artwork.dimensions|| "Not provided"}</p>
+               <p>${artwork.medium || "Not provided"}</p></div>
   `;
 
 }
