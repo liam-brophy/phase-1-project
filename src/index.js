@@ -1,7 +1,7 @@
 //! GLOBAL VARIABLES
 
 const searchBar = document.getElementById("search-bar");
-const mapContainer = document.getElementById("map-container");
+const artContainer = document.getElementById("art-container");
 const searchSuggestions = document.getElementById("search-suggestions");
 let selectedArtwork = null;
 const MAX_SUGGESTIONS = 5;
@@ -85,8 +85,8 @@ async function handleFilterChange() {
 }
 
 function displayNoResultsMessage() {
-  const mapContainer = document.getElementById("map-container");
-  mapContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
+  const artContainer = document.getElementById("art-container");
+  artContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
 }
 
 //!HANDLE SEARCH INPUT
@@ -234,7 +234,7 @@ async function fetchArtworkDetail(id) {
 
 //! RENDER ART DETAILS! (IMG AND TITLE)
 function renderArtworkDetail(artwork) {
-  //*set html of map container to show art and title
+  //*set html of art container to show art and title
   artworkText.innerHTML = `
       
           
@@ -303,34 +303,95 @@ function displayArtwork(artwork) {
 
 }
 
-
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme) {
-    body.classList.add(savedTheme);
-    themeToggle.textContent = savedTheme === "dark-mode" ? "Switch to Light Mode" : "Switch to Dark Mode";
-    themeToggle.className = savedTheme;
+  body.classList.add(savedTheme);
+  themeToggle.classList.add(savedTheme);
 }
 
-// Toggle theme on button click
-themeToggle.addEventListener("click", () => {
-    if (body.classList.contains("dark-mode")) {
-        body.classList.replace("dark-mode", "light-mode");
-        themeToggle.textContent = "Switch to Dark Mode";
-        themeToggle.className = "light-mode";
-        localStorage.setItem("theme", "light-mode");
-    } else {
-        body.classList.replace("light-mode", "dark-mode");
-        themeToggle.textContent = "Switch to Light Mode";
-        themeToggle.className = "dark-mode";
-        localStorage.setItem("theme", "dark-mode");
-    }
-});
+
+
+// Creating a Favorites list
+let favorites = [];
+
+
+
+//Not going to be used right now
+function createFavorites() {
+  //Get class name to retrieve art pieces to save for list
+  const favoriteList = document.getElementById("favorites-list");
+  favoriteList.innerHTML = ''
+
+  favorites.forEach(favoriteArt => {
+    const listArt = document.createElement('li')
+    listArt.textContext = `Art Piece: ${favoriteArt.title}`
+    //Removing a favorited art piece
+    const removeButton = document.createElement('button')
+    removeButton.textContent = 'Remove'
+    removeButton.addEventListener('click', () => removeFavorite(index))
+    
+
+    favoriteList.appendChild(listArt)
+  });
+}
+
+
+//!Tasks to acomplish: Stop code from duplicating images and be able to remove a favorite
+
+
+//Click Event Listener for Favorites Button
+const favButton = document.getElementById('favorite-button')
+const favoriteList = document.getElementById("favorites-list")
+
+
+//Click button being used for Favorites!
+function favClick() {
+  const image = document.querySelector("#artwork-text img")
+  const copyImage = image.cloneNode(true)
+  favoriteList.appendChild(copyImage)
+  //Trying to limit a clone to a max of 1
+  // if (favoriteList.querySelector('copyImage') === image){
+  //   copyImage.slice(index, 1)
+  //   console.log("This art piece is already favorited!")
+  //   return;
+  // }
+}
+
+//Attempting to toggle the favorite button to add and remove favorites
+function toggleFavorite() {
+  const button = document.querySelector("#favorite-button")
+  const image = document.querySelector("#artwork")
+  const favoriteList = document.querySelector("#favorite-list")
+  const existingFavorite = favoriteList.querySelector("img")
+  if (existingFavorite) {
+    favoriteList.removeChild(existingFavorite)
+    button.textContent = "Favorite"
+  } else {
+    const copyImage = image.cloneNode(true)
+    favoriteList.appendChild(copyImage)
+    button.textContent = "Unfavorite"
+  }
+}
 
 
 
 //!EVENT LISTENERS
+favButton.addEventListener('click', favClick)
+
+themeToggle.addEventListener("click", () => {
+  if (body.classList.contains("dark-mode")) {
+      body.classList.replace("dark-mode", "light-mode");
+      themeToggle.classList.replace("dark-mode", "light-mode");
+      localStorage.setItem("theme", "light-mode");
+  } else {
+      body.classList.replace("light-mode", "dark-mode");
+      themeToggle.classList.replace("light-mode", "dark-mode");
+      localStorage.setItem("theme", "dark-mode");
+  }
+});
 document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
 document.getElementById("movement-select").addEventListener("change", handleFilterChange);
+
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container") &&
       !event.target.closest(".search-right-filters") &&
