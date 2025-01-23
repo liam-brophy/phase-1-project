@@ -306,30 +306,38 @@ function displayArtwork(artwork) {
 
 }
 
+
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme) {
     body.classList.add(savedTheme);
-    themeToggle.textContent = savedTheme === "dark-mode" ? "Switch to Light Mode" : "Switch to Dark Mode";
-    themeToggle.className = savedTheme;
+    themeToggle.classList.add(savedTheme)
 }
 
-// Toggle theme on button click
-themeToggle.addEventListener("click", () => {
-    if (body.classList.contains("dark-mode")) {
-        body.classList.replace("dark-mode", "light-mode");
-        themeToggle.textContent = "Switch to Dark Mode";
-        themeToggle.className = "light-mode";
-        localStorage.setItem("theme", "light-mode");
-    } else {
-        body.classList.replace("light-mode", "dark-mode");
-        themeToggle.textContent = "Switch to Light Mode";
-        themeToggle.className = "dark-mode";
-        localStorage.setItem("theme", "dark-mode");
-    }
-});
+
+
+//* Toggle theme on button click
+
+
+//* Update the saved theme check
+
+if (savedTheme) {
+  body.classList.add(savedTheme);
+  themeToggle.classList.add(savedTheme);
+}
 
 
 //!EVENT LISTENERS
+themeToggle.addEventListener("click", () => {
+  if (body.classList.contains("dark-mode")) {
+      body.classList.replace("dark-mode", "light-mode");
+      themeToggle.classList.replace("dark-mode", "light-mode");
+      localStorage.setItem("theme", "light-mode");
+  } else {
+      body.classList.replace("light-mode", "dark-mode");
+      themeToggle.classList.replace("light-mode", "dark-mode");
+      localStorage.setItem("theme", "dark-mode");
+  }
+});
 document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
 document.getElementById("movement-select").addEventListener("change", handleFilterChange);
 document.getElementById("theme-select").addEventListener("change", handleFilterChange);
@@ -337,7 +345,7 @@ document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container") &&
       !event.target.closest(".search-right-filters") &&
       !event.target.closest("select")) {
-      
+
  }
 
 });

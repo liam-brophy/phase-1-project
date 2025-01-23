@@ -9,8 +9,10 @@
     <script defer type="module" src="./src/index.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 
 
 </head>
@@ -18,7 +20,13 @@
 <body>
 
     <div id="header">B & L & K Project 1</div>
-    <button id="theme-toggle">Switch to Dark Mode</button>
+    <div id="theme-toggle-container">
+        <div id="theme-toggle" class="theme-toggle dark-mode">
+            <div class="theme-toggle-ball"></div>
+            <i class="fa-solid fa-sun theme-toggle-icon sun-icon"></i>
+            <i class="fa-solid fa-moon theme-toggle-icon moon-icon"></i>
+        </div>
+    </div>
     
     <div id="search-filters">
         <!-- This is the search -->
@@ -62,11 +70,12 @@
              <div id="artwork-text">
              </div>
             <!-- FAVORITE BUTTON  -->
-            <input type="button" name="favorite" id="favorite-button"/>
+            
         </div>
     
         </div>
         <h4>Favorites</h4>
+        <input type="button" name="favorite" id="favorite-button"/>
         <div id="favorites-container">
             <!-- This is where relevant facts and other info from the API will appear! -->
         </div>
