@@ -55,6 +55,6 @@ Contributions are welcome! If you’d like to enhance the app, feel free to fork
 
 
 ## 🖋️ Credits
-	•	The Art Institute of Chicago API for its extensive collection of artwork data.
-	•	Built with ❤️ by @liam-brophy , @blair , @kerissa.
+•	The Art Institute of Chicago API for its extensive collection of artwork data.
+•	Built with ❤️ by [Blair Crumbly](https://github.com/BlairCrumbly) , [Liam Brophy](https://github.com/liam-brophy) , [Kerissa ](https://github.com/KerissaGit)
 
