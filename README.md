@@ -6,9 +6,9 @@
 
 ## ✨ Features  
 
-- **Search by Name**: Look up artwork by entering a title or artist's name.  
-- **Random Inspiration**: Generate a random piece of art to get a fresh perspective.  
-- **Time Period Filters**: Explore artwork from specific historical periods using the time range filter.  
+- **Search by Name**: Look up artwork by entering a title.  
+- **Random Inspiration**: Generate a random piece of art.  
+- **Time Period Filters**: Explore artwork from specific historical periods using the period filter.  
 - **Remember your Favorites**: Save pieces you encounter for later, or remove them from your favorites.  
 - **Dark & Light Mode**: Toggle between light and dark themes for a comfortable viewing experience.  
 
@@ -29,12 +29,13 @@
 ## 🚀 How to Use  
 
 
-**Try it out on our site, or:**:  
+### **Try it out on [our site:](https://liam-brophy.github.io/phase-1-project/)**
+or:  
 
 1. **Clone the Repository**:  
    ```bash  
-   git clone <repository_url>  
-   cd art-break-spa
+   git clone <https://github.com/liam-brophy/phase-1-project>  
+   cd phase-1-project
 2. **Open the App**:  
 Open the index.html file in your browser to get started.
 
@@ -46,7 +47,7 @@ Open the index.html file in your browser to get started.
 
 ## 🌐 API Details
 
-This app uses The Art Institute of Chicago API to retrieve high-quality artwork information and images. Learn more about the API here.
+This app uses The Art Institute of Chicago API to retrieve high-quality artwork information and images. Learn more about the API [here.](https://api.artic.edu/docs/)
 
 
 ## 🙌 Contributing
