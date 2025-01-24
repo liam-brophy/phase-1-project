@@ -1,3 +1,18 @@
+//! GLOBAL VARIABLES
+
+const searchBar = document.getElementById("search-bar");
+const artContainer = document.getElementById("art-container");
+const searchSuggestions = document.getElementById("search-suggestions");
+let selectedArtwork = null;
+const MAX_SUGGESTIONS = 5;
+let debounceTimer;
+let cachedArtworks = []; // caches artworks to avoid refetching
+const artworkText = document.getElementById("artwork-text");
+const themeToggle = document.getElementById("theme-toggle");
+const body = document.body;
+searchSuggestions.style.display = "none";
+
+
 
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
@@ -24,93 +39,227 @@ async function fetchData() {
 
       page++;
     }
+    cachedArtworks = artworks
 
+
+    
+    displayArtwork(artworks[1]) //displays immiate
     return artworks;
   } catch (error) {
     console.error("Error fetching all artworks:", error);
     return [];
   }
 }
-console.log(fetchData())
-//!Currently fetches 500 artworks (limit 100 * max pages 5)
+console.log(fetchData());
 
+async function handleFilterChange() {
+  if (cachedArtworks.length === 0) {
+    cachedArtworks = await fetchData(); // fetch data only once
+  }
 
-async function fetchFilteredRandomArtwork() {
-  try {
-    // fetches all artworks from the API
-    const artworks = await fetchData();
+  const movementSelect = document.getElementById("movement-select");
 
-    const movementSelect = document.getElementById("movement-select");
-    const selectedValue = movementSelect.value;
+  const movementValue = movementSelect.value;
 
-    const themeSelect = document.getElementById("movement-select");
-    const selectedTheme = movementSelect.value;
+  let filteredArtworks = cachedArtworks;
 
-    let filteredArtworks = artworks;
-
-    //!FILTER BY MOVEMENT
-    if (selectedValue) {
-    const [startYear, endYear] = selectedValue.split("-").map(Number);
-    filteredArtworks = artworks.filter(
+  //! MOVEMENT FILTER
+  if (movementValue) {
+    const [startYear, endYear] = movementValue.split("-").map(Number);
+    filteredArtworks = filteredArtworks.filter(
       artwork =>
         artwork.date_start >= startYear && artwork.date_start <= endYear
-      //filters date by range
     );
+  }
+
+
+  if (filteredArtworks.length === 0) {
+    console.error("No artworks found for the selected filters");
+    displayNoResultsMessage();
+    return;
+  }
+
+  const randomArtwork =
+    filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
+  displayArtwork(randomArtwork);
+}
+
+function displayNoResultsMessage() {
+  const artContainer = document.getElementById("art-container");
+  artContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
+}
+
+//!HANDLE SEARCH INPUT
+async function handleSearch(event) {
+  const userInput = event.target.value.trim();
+  clearTimeout(debounceTimer);
+
+  debounceTimer = setTimeout(async () => {
+      if (!userInput) {
+          searchSuggestions.style.display = "none";
+          return;
+      }
+      try {
+          // Use cached artworks instead of making an API call
+          if (cachedArtworks.length === 0) {
+              cachedArtworks = await fetchData();
+          }
+
+          // Filter cached artworks that start with user input
+          const results = cachedArtworks.filter(artwork =>
+              artwork.title &&
+              artwork.title.toLowerCase().startsWith(userInput.toLowerCase())
+          );
+
+          // Sort results alphabetically
+          const sortedResults = results.sort((a, b) =>
+              a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+          );
+
+          renderSuggestions(sortedResults.slice(0, MAX_SUGGESTIONS));
+      } catch (error) {
+          console.error("Search error:", error);
+          searchSuggestions.style.display = "none";
+      }
+  }, 300);
+}
+
+//! HANDLE SEARCH RESULTS WITH USER INPUT
+function sortResultsByStartsWith(results, searchInput) {
+    const searchLower = searchInput.toLowerCase();
+    //*sorts the result array compares a and b
+    return results.sort((a, b) => {
+        const titleA = a.title.toLowerCase();
+        const titleB = b.title.toLowerCase();
+        //* check if titles start with search input
+        //* for each item its comapred with title a & b
+        //* checks if a and b start with userInput
+        //* if aStartswith is true if titleA starts with searchlower
+        //* if aStartswith is true if titleB starts with searchlower
+
+        const aStartsWith = titleA.startsWith(searchLower);
+        const bStartsWith = titleB.startsWith(searchLower);
+        
+        if (aStartsWith && !bStartsWith) return -1;
+        if (!aStartsWith && bStartsWith) return 1;
+        
+        //* if neither or both start with search input, sort alphabetically
+        return titleA.localeCompare(titleB);
+    });
+}
+
+//! FETCH SEARCH SUGGS 
+async function fetchSearchSuggestions(userInput) {
+    //* increase the limit to get more results for better sorting
+    const apiUrl = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(userInput)}&fields=id,title,image_id&limit=20`;
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+        throw new Error("Failed to fetch suggestions");
     }
+    const data = await response.json(); //.body .ok .status
+    return data.data;
+}
 
-    //!FILTER BY THEME
-    if (selectedTheme) {
-      filteredArtworks = filteredArtworks.filter(artwork =>
-        artwork.subject_titles &&
-        artwork.subject_titles.some(subject =>
-          subject.toLowerCase().includes(selectedTheme.toLowerCase())
-        )
-      );
-    }
-
-    if (filteredArtworks.length === 0) {
-      throw new Error("No artworks found for the selected period");
-    }
-
-    // selects a random artwork from the returned array
-    const randomArtwork =
-      filteredArtworks[Math.floor(Math.random() * filteredArtworks.length)];
-
-    // displays the random artwork details
-    displayArtwork(randomArtwork);
-  } catch (error) {
-    console.error("Error fetching random artwork:", error);
-
-    //
-    const mapContainer = document.getElementById("map-container");
-    mapContainer.innerHTML = `<p>Failed to fetch a random artwork. Please try again later.</p>`;
+//! RENDER SEARCH SUGGS DROP DOWN
+function renderSuggestions(results) {
+  searchSuggestions.innerHTML = "";
+  
+  if (results.length > 0) {
+      results.forEach(result => {
+          const div = document.createElement("div");
+          div.className = `suggestion-item ${body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode'}`;
+          div.textContent = result.title;
+          
+          div.addEventListener("click", () => {
+              searchBar.value = result.title;
+              selectedArtwork = result;
+              searchSuggestions.style.display = "none";
+              displayArtwork(result);
+          });
+          
+          searchSuggestions.appendChild(div);
+      });
+      searchSuggestions.style.display = "block";
+  } else {
+      const noResultsDiv = document.createElement("div");
+      noResultsDiv.className = `suggestion-item ${body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode'}`;
+      noResultsDiv.textContent = "No artworks found starting with '" + searchBar.value + "'";
+      searchSuggestions.appendChild(noResultsDiv);
+      searchSuggestions.style.display = "block";
   }
 }
 
 
 
+//!HANDLE ENTER KEY
+async function handleEnterKey(event) {
+  if (event.key === "Enter") {
+      const userInput = searchBar.value.trim().toLowerCase();
+      searchSuggestions.style.display = "none";
+ 
+      if (selectedArtwork) {
+          displayArtwork(selectedArtwork);
+      } else if (userInput) {
+          const results = cachedArtworks.filter(artwork => 
+              artwork.title && 
+              artwork.title.toLowerCase().startsWith(userInput)
+          ).sort((a, b) => 
+              a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+          );
+ 
+          if (results.length > 0) {
+              displayArtwork(results[0]);
+          } else {
+              displayNoResultsMessage();
+          }
+      }
+      selectedArtwork = null;
+  }
+ }
+
+//! FETCH ARTWORK DETIALS
+async function fetchArtworkDetail(id) {
+  const apiUrl = `https://api.artic.edu/api/v1/artworks/${id}`;
+
+  try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+          throw new Error("Failed to fetch artwork details");
+      }
+
+      const data = await response.json();
+      renderArtworkDetail(data.data);
+  } catch (error) {
+      handleError(error);
+  }
+}
+
+//! RENDER ART DETAILS! (IMG AND TITLE)
+function renderArtworkDetail(artwork) {
+  //*set html of art container to show art and title
+  artworkText.innerHTML = `
+      
+          
+          <img src="https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg"
+               alt="${artwork.title}"
+               />
+               <div class="artwork-details">
+               <h3>${artwork.title || "Unknown"} </h3>
+               <h4>${artwork.artist || "Unknown"}</h4>
+               <p>${artwork.year|| "Not provided"}</p>
+               <p>${artwork.dimensions|| "Not provided"}</p>
+               <p>${artwork.medium || "Not provided"}</p></div>
+  `;
+
+}
+
+
 function displayArtwork(artwork) {
-  // Gets the map-container div
+
   const artworkText = document.getElementById("artwork-text");
+  artworkText.innerHTML = "";// Clears any existing content
 
-  // Clears any existing content
-  artworkText.innerHTML = "";
 
-  // Populates the div with the random artwork details
-  const title = document.createElement("p");
-  title.textContent = artwork.title;
-
-  const year = document.createElement("p");
-  year.textContent = artwork.date_start;
-
-  const artist = document.createElement("p");
-  artist.textContent = `${artwork.artist_title || "Unknown"}`;
-
-  const dimensions = document.createElement("p");
-  dimensions.textContent = artwork.dimensions;
-
-  const medium = document.createElement("p");
-  medium.textContent = artwork.medium;
 
   const image = document.createElement("img");
   image.src = artwork.image_id
@@ -118,17 +267,119 @@ function displayArtwork(artwork) {
     : "https://via.placeholder.com/843x843.png?text=No+Image+Available";//!replace with actual placeholder
   image.alt = artwork.title;
 
-  // Appends the elements to the container
-  //! Will have to change where this data is appended once we get to styling!
-  //! Maybe we should validate if all of the data is available before appending! Some are missing details
-  artworkText.appendChild(title);
-  artworkText.appendChild(artist);
-  artworkText.appendChild(year);
-  artworkText.appendChild(dimensions);
-  artworkText.appendChild(medium);
   artworkText.appendChild(image);
+
+  // Create a container for text details
+  const textContainer = document.createElement("div");
+  textContainer.classList.add("artwork-details"); // Use the new CSS class
+
+  // Populates the div with the random artwork details
+  const title = document.createElement("h3");
+  title.textContent = `${artwork.title || "Unknown"}`;
+
+  const artist = document.createElement("h4");
+  artist.textContent = `${artwork.artist_title || "Unknown"}`;
+
+  const year = document.createElement("p");
+  year.textContent = `${artwork.date_start || "Unknown"}`;
+
+  const dimensions = document.createElement("p");
+  dimensions.textContent = `${artwork.dimensions || "Not provided"}`;
+
+  const medium = document.createElement("p");
+  medium.textContent = `${artwork.medium || "Not provided"}`;
+
+  // Append details to the container
+  textContainer.appendChild(title);
+  textContainer.appendChild(artist);
+  textContainer.appendChild(year);
+  textContainer.appendChild(dimensions);
+  textContainer.appendChild(medium);
+
+  // Append the text container to artwork-text
+  artworkText.appendChild(textContainer);
+
+  setTimeout(() => {
+    artworkText.classList.add("fade-in");
+  }, 50); // Delay to trigger the animation
+
+}
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  body.classList.add(savedTheme);
+  themeToggle.classList.add(savedTheme);
 }
 
 
-document.getElementById("conjure-button").addEventListener("click", fetchFilteredRandomArtwork);
 
+// Creating a Favorites list
+let favorites = [];
+
+//Click Event Listener for Favorites Button
+const favButton = document.getElementById('favorite-button')
+const favoriteList = document.getElementById("favorites-list")
+
+//Click button being used for Favorites!
+//Adds and removes a favorite and limits to only 1
+function favClick() {
+  const image = document.querySelector("#artwork-text img")
+    if (!favorites.includes(image.src)){
+      const copyImage = image.cloneNode(true)
+      copyImage.addEventListener('click', function(){
+        copyImage.remove()
+        favorites = favorites.filter(function(favoritedImg){
+          return favoritedImg !== copyImage.src
+        })
+      });
+      favoriteList.appendChild(copyImage)
+      favorites.push(image.src)
+    };
+}
+
+//Callback is a function passed as an argumnent to another function whose exicution will be delayed in time
+
+
+
+//!Tasks to acomplish: Stop code from duplicating images and be able to remove a favorite
+
+
+//Click Event Listener for Favorites Button
+
+
+
+//Click button being used for Favorites!
+
+
+
+
+//!EVENT LISTENERS
+favButton.addEventListener('click', favClick)
+
+themeToggle.addEventListener("click", () => {
+  if (body.classList.contains("dark-mode")) {
+      body.classList.replace("dark-mode", "light-mode");
+      themeToggle.classList.replace("dark-mode", "light-mode");
+      localStorage.setItem("theme", "light-mode");
+  } else {
+      body.classList.replace("light-mode", "dark-mode");
+      themeToggle.classList.replace("light-mode", "dark-mode");
+      localStorage.setItem("theme", "dark-mode");
+  }
+});
+document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
+document.getElementById("movement-select").addEventListener("change", handleFilterChange);
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".search-container") &&
+      !event.target.closest(".search-right-filters") &&
+      !event.target.closest("select")) {
+
+ }
+
+});
+searchBar.addEventListener("input", handleSearch);
+searchBar.addEventListener("keydown", handleEnterKey);
+
+
+fetchData()
