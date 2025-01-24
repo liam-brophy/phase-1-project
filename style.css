@@ -6,13 +6,12 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    /* background-color: white; */
     transition: background-color 0.3s, color 0.3s;
 }
 
 #search-bar-div {
-    position: relative; /* Keep suggestions aligned with the search bar */
-    width: 250px; /* Matches the width of the search bar */
+    position: relative;
+    width: 250px;
 }
 
 #art-container {
@@ -21,8 +20,6 @@ body {
     margin: 20px auto;
     position: relative;
     border-radius: 25px;
-    /* background-color: #b3dbd3; */
-    /* overflow: hidden; */
 }
 
 #artwork-text {
@@ -31,32 +28,29 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    max-width: 90vw; /* Maximum width as a percentage of the viewport width */
-    max-height: 90vh; /* Maximum height as a percentage of the viewport height */
-    overflow: hidden; /* Ensures no content overflows */
-    /* background-color: white; Optional: A background to distinguish the container */
-    /* border: 1px solid black; Optional: A border to define the container */
-    border-radius: 10px; /* Optional: Add rounded corners */
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+    border-radius: 10px;
 }
 
 #artwork-text.fade-in {
-    opacity: 1;  
-} 
+    opacity: 1;
+}
 
 #artwork-text img {
     border-radius: 10px;
-    max-width: 100%; /* Image width scales within the container */
-    max-height: 100%; /* Image height scales within the container */
-    object-fit: contain; /* Ensures the image is scaled proportionally */
-    display: block; /* Removes extra space below inline images */
-    aspect-ratio: auto; /* Adapts to the image's natural aspect ratio */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    aspect-ratio: auto;
     width: 100%;
     height: 100%;
     z-index: 1;
     position: absolute;
     top: 0;
     left: 0;
-    /*object-fit: cover; /* Ensures the image covers the area */
 }
 
 
@@ -65,22 +59,14 @@ body {
     bottom: 10px;
     left: 10px;
     z-index: 2;
-    /* Ensures the text is above the image */
-    background-color: rgba(0, 0, 0, 0.3);
-    /* Semi-transparent background for readability */
+    background-color: rgba(0, 0, 0, 0.466);
     color: white;
-    /* White text for contrast */
     padding: 5px;
-    /* Padding inside the text box */
     border-radius: 10px;
-    /* Rounded corners for the text box */
     max-width: 90%;
-    /* Prevents the text from being too wide */
     font-size: 12px;
-    /* Adjust text size */
     display: flex;
     flex-direction: column;
-    /* Stacks text items vertically */
     line-height: 0;
 }
 
@@ -141,6 +127,7 @@ input{
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
+    cursor: pointer;
 }
 
   #conjure-button button i {
@@ -153,7 +140,7 @@ input{
 }
 
 #conjure-button button:hover i {
-    color: #ffbf00; /* Turns the icon yellow when the button is hovered */
+    color: #ffbf00; /** important turns the icon yellow when the button is hovered */
     transition: transform 0.3s ease-in-out;
 
 }
@@ -182,16 +169,16 @@ input{
 
 #search-bar-div {
     position: relative;
-    width: 100%; 
+    width: 100%;
 }
 
 #search-bar {
     padding: 8.5px;
     width: 100%;
-    height: 40px; 
+    height: 40px;
     border-radius: 15px;
     font-size: 16px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     margin-bottom: 5px;
 }
 
@@ -200,10 +187,10 @@ input{
     display: flex;
     position: absolute;
     top: 50%;
-    left: 100%; 
-    transform: translateY(-50%); 
-    margin-left: 10px; 
-    min-width: auto; 
+    left: 100%;
+    transform: translateY(-50%);
+    margin-left: 10px;
+    min-width: auto;
     color: white;
     background-color: rgba(0, 0, 0, 0.648);
     border-radius: 10px;
@@ -215,9 +202,9 @@ input{
 
 .suggestion-item {
     white-space: nowrap;
-    display: block; 
-    width: auto; 
-    padding: 5px 10px; 
+    display: block;
+    width: auto;
+    padding: 5px 10px;
 }
 
 .suggestion-item:hover {
@@ -249,7 +236,7 @@ body.dark-mode {
 }
 
 
-/** Theme Toggle Switch Styles */
+/** theme Toggle Switch Styles */
 #theme-toggle-container {
     position: fixed;
     top: 20px;
@@ -343,23 +330,20 @@ body.dark-mode {
     background-color: #0000006e;
     margin: 5px;
     border-radius: 15px;
-    position: relative; 
-    overflow: hidden; 
+    position: relative;
+    overflow: hidden;
     margin-bottom: 50px;
     padding: 20px;
-    
 }
 
 #favorites-list{
     display: flex;
     height: 150px;
     margin-top: -5px;
-    
-    
 }
 
 .favorite-item {
-    position: relative; /* Allow absolute positioning of the "X" */
+    position: relative;
     margin: 5px;
 }
 
@@ -367,9 +351,7 @@ body.dark-mode {
 #favorites-list img {
     width: 100px;
     height: 100px;
-    
     margin: 5px;
-    
 }
 
 #favorites-header {
@@ -384,23 +366,18 @@ body.dark-mode {
     display: flex;
     justify-content: center;
     align-items: center;
-    
     border-radius: 5px;
     border: none;
     padding: 5px;
     margin-top: 10px;
 }
 
-
-
-
-
 /** heart animation :P */
 
 
 #favorite-button.favorites-page i {
-    font-size: 24px; /* Adjust the size as needed */
-    
+    font-size: 24px;
+    cursor: pointer;
 }
 
 #favorite-button.favorites-page {
@@ -408,7 +385,6 @@ body.dark-mode {
 }
 
 #favorite-button.favorites-page:hover {
-    
     transform: scale(1.3);
 }
 
