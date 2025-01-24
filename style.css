@@ -1,87 +1,117 @@
-body{
+body {
     font-family: "Funnel Display", serif;
     margin: 0;
-    height: 100vh; 
+    height: 100vh;
     display: flex;
-    justify-content: center; 
-    align-items: center; 
-    flex-direction: column; 
-    background-color: white;
-    transition: background-color  0.3s, color 0.3s;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* background-color: white; */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-#map-container {
-    width: 70%;
-    height: 100%;
-    border: 1px solid black;
+#search-bar-div {
+    position: relative; /* Keep suggestions aligned with the search bar */
+    width: 250px; /* Matches the width of the search bar */
+}
+
+#art-container {
+    width: 80%;
+    height: 80%;
     margin: 20px auto;
     position: relative;
     border-radius: 25px;
-    overflow: hidden;
+    /* background-color: #b3dbd3; */
+    /* overflow: hidden; */
 }
 
 #artwork-text {
-    position: relative;
-    width: 100;
-    height: 100%;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 90vw; /* Maximum width as a percentage of the viewport width */
+    max-height: 90vh; /* Maximum height as a percentage of the viewport height */
+    overflow: hidden; /* Ensures no content overflows */
+    /* background-color: white; Optional: A background to distinguish the container */
+    /* border: 1px solid black; Optional: A border to define the container */
+    border-radius: 10px; /* Optional: Add rounded corners */
 }
 
+#artwork-text.fade-in {
+    opacity: 1;  
+} 
+
 #artwork-text img {
+    border-radius: 10px;
+    max-width: 100%; /* Image width scales within the container */
+    max-height: 100%; /* Image height scales within the container */
+    object-fit: contain; /* Ensures the image is scaled proportionally */
+    display: block; /* Removes extra space below inline images */
+    aspect-ratio: auto; /* Adapts to the image's natural aspect ratio */
     width: 100%;
     height: 100%;
-
     z-index: 1;
     position: absolute;
     top: 0;
     left: 0;
+    /*object-fit: cover; /* Ensures the image covers the area */
 }
+
 
 #artwork-text .artwork-details {
     position: absolute;
     bottom: 10px;
     left: 10px;
     z-index: 2;
-    background-color: rgba(0, 0, 0, 0.6);
+    /* Ensures the text is above the image */
+    background-color: rgba(0, 0, 0, 0.3);
+    /* Semi-transparent background for readability */
     color: white;
+    /* White text for contrast */
     padding: 5px;
+    /* Padding inside the text box */
     border-radius: 10px;
+    /* Rounded corners for the text box */
     max-width: 90%;
-    font-size: 14px;
+    /* Prevents the text from being too wide */
+    font-size: 12px;
+    /* Adjust text size */
     display: flex;
     flex-direction: column;
+    /* Stacks text items vertically */
+    line-height: 0;
 }
 
-#search-filters{
+#search-filters {
     flex: auto;
 }
 
-#favorites-container{
+#favorites-container {
     width: 80%;
     height: 200px;
     border: 1px solid black;
-    margin: 20px;
-    border-radius: 25px;
+    margin: 5px;
+    border-radius: 15px;
+    position: relative; 
+    overflow: hidden; 
 }
 
-#header{
+#header {
     margin: 50px;
     text-align: center;
 }
 
-#footer{
+#footer {
     margin: 50px;
     margin-top: 200px;
     text-align: center;
 }
 
-#favorite-button{
-    height: 30px;
-    position: relative;
-    left: 95%;
-    top: 90%;
-}
 
-select{
+
+select {
     border-radius: 15px;
     font-family: "Funnel Display", serif;
 }
@@ -89,39 +119,105 @@ select{
 input{
     border-radius: 15px;
 }
-/**RANDOM BUTTON*/
+
 #conjure-button{
-    border-radius: 15px;
-    width: auto;
-    font-family: "Funnel Display", serif;
-}
-/* #search-filters {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    margin: 20px;
-} */
-/**SEARCH BAR*/
-.search-suggestions{
-    color: white;
-    background-color: rgba(0, 0, 0, 0.648);
-    border-radius: 5px;
-    padding: 2%;
-    margin-bottom: 15px;
-    cursor: pointer;
+    justify-content: center;
+    margin: 10px;
+    font-size: 54px;
+    
 }
-.suggestion-item:hover{
-    font-weight: bolder;
-    font-size: large;
-
+#conjure-button button{
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    font-size: 15px;
+    transition: transform 0.3s ease;
+    
 }
 
-#search-bar{
-    padding: 3.5px;
+#conjure-button button i{
+    font-size: 15px;
+    transition: color 0.3s ease-in-out;
+}
+
+.gradient-hover-effect {
+    display: flex;
+    padding: 0.875em 2em;
+
+    background: linear-gradient(45deg, #000000, #b3dbd3, #000000);
+    
+    font-family: inherit;
+    color: rgb(2,0,36);
+    text-decoration: none;
+    transition: background-color 1s;
+    place-content: center;
+    border-radius: 15px;
+    
+  }
+.gradient-hover-effect:hover {
+    background: linear-gradient(270deg,#b3dbd3, #000000, #b3dbd3);
+    background-color: #ffffff;
+    color: #ffffff;
+    transform: scale(1.08);
+    transition: transform 0.3s ease-in-out;
+    
+  }
+
+
+
+#search-bar-div {
+    position: relative;
+    width: 100%; 
+}
+
+#search-bar {
+    padding: 8.5px;
+    width: 100%;
+    height: 40px; 
+    border-radius: 15px;
+    font-size: 16px;
+    box-sizing: border-box; 
     margin-bottom: 5px;
 }
 
+/** SEARCH SUGGESTIONS */
+.search-suggestions {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 100%; 
+    transform: translateY(-50%); 
+    margin-left: 10px; 
+    min-width: auto; 
+    color: white;
+    background-color: rgba(0, 0, 0, 0.648);
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.suggestion-item {
+    white-space: nowrap;
+    display: block; 
+    width: auto; 
+    padding: 5px 10px; 
+}
+
+.suggestion-item:hover {
+    font-weight: bolder;
+    font-size: large;
+}
+
+.suggestion-item{
+    white-space: nowrap;
+    overflow: none; 
+    
+    display: block;
+    width: 100%; 
+}
 
 /**LIGHT AND DARK MODE*/
 
@@ -132,23 +228,12 @@ body.light-mode {
     color: #000000;
 }
 
-.light-mode #map-container,
-.light-mode #favorites-container {
-    background-color: #f0f0f0;
-    border-color: #cccccc;
-}
-
 /* Dark Mode */
 body.dark-mode {
     background-color: #121212;
     color: #ffffff;
 }
 
-.dark-mode #map-container,
-.dark-mode #favorites-container {
-    background-color: #333333;
-    border-color: #444444;
-}
 
 /** Theme Toggle Switch Styles */
 #theme-toggle-container {
@@ -224,15 +309,87 @@ body.dark-mode {
     display: none;
 }
 
+/* FAVORITES */
+#favorite-button {
+    height: 30px;
+    position: relative;
+    left: 95%;
+    top: 90%;
+    background: none;
+}
+
+#favorites-container{
+    
+    margin-bottom: 50px;
+    padding: 20px;
+}
+
 #favorites-list{
     display: flex;
-    height: 250px;
+    height: 150px;
+    margin-top: -5px;
+    
+    
 }
+
 #favorites-list img {
-    width: 200px;
-    height: 200px;
-    position: relative;;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    margin: 5px;
+    background-color: aqua;
 }
-#favorite-button{
-    z-index: 90;
+
+#favorites-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#favorite-button.favorites-page {
+    position: static;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+
+/** heart animation :P */
+
+
+#favorite-button.favorites-page i {
+    font-size: 24px; /* Adjust the size as needed */
+}
+
+#favorite-button.favorites-page {
+    transition: transform 0.3s ease
+}
+
+#favorite-button.favorites-page:hover {
+    
+    transform: scale(1.3);
+}
+
+#favorite-button.favorites-page i {
+    font-size: 24px;
+    transition: color 0.3s ease;
+}
+
+#favorite-button.favorites-page:hover i {
+    color: #ff86b4 !important; /* Brighter heart color on hover */
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+#favorite-button.favorites-page:active {
+    animation: heartBeat 0.5s;
 }

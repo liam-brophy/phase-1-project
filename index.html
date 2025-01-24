@@ -12,17 +12,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" href="img/final icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-
 
 </head>
 
 <body>
+    <div id="header"></div>
 
-    <div id="header">B & L & K Project 1</div>
     <div id="theme-toggle-container">
         <div id="theme-toggle" class="theme-toggle dark-mode">
             <div class="theme-toggle-ball"></div>
@@ -30,19 +28,25 @@
             <i class="fa-solid fa-moon theme-toggle-icon moon-icon"></i>
         </div>
     </div>
-    
+
+
     <div id="search-filters">
         <!-- This is the search -->
-
-        <label for="search-bar">Search: </label>
-        <input type="text" name="search" id="search-bar" placeholder="Search and press Enter"/>
+        <div id="search-bar-div">
+        <label for="search-bar"></label>
+        <input type="text" name="search" id="search-bar" placeholder="Search"/>
         <div id="search-suggestions" class="search-suggestions"></div>
+        </div>
 
-        <button id="conjure-button">Conjure</button>
+        <div id="conjure-button" >
+        <button class="gradient-hover-effect">
+            <i class="fa-solid fa-wand-sparkles"></i>
+           </button>
+        </div>   
 
 
             <!-- This is the Period Select -->
-            <label for="movement">Movement</label>
+            <label for="movement">Period</label>
             <select id="movement-select">
                 <option value="">All Periods</option> <!-- default option, no selection -->
                 <option value="1400-1600">Renaissance (1400–1600)</option>
@@ -55,32 +59,35 @@
                 <option value="1900-1950">Modernism (1900–1950)</option>
                 <option value="1950-2025">Contemporary Art (1950–Present)</option>
             </select>
-            <!-- This is the Medium Select -->
             
-            <select name="themes" id="theme-select">
-                
-                
-            </select>
     
         </div>
     
-         <div id="map-container">
+        <div id="art-container">
             <!-- This is where the art is displayed after it is fetched -->
              <div id="artwork-text">
              </div>
-            <!-- FAVORITE BUTTON  -->
-            
-        </div>
-    
-         </div>
-        <h4>Favorites</h4>
-        <input type="button" name="favorite" id="favorite-button"/>
-        <div id="favorites-container">
-            <!-- This is where relevant facts and other info from the API will appear!
-        </div>
-    
-    
 
+
+             <!-- FAVORITE BUTTON  -->
+        </div>
+        
+        <!-- Heart button
+        <i class="fa-regular fa-heart"></i>
+        <i class="fa-solid fa-heart"></i> -->
+        
+    </div>
+    <div id="favorites-header">
+        <h4>Your Favorites!</h4>
+        <button name="favorite" id="favorite-button" class="favorites-page">
+            <i class="fa-solid fa-heart" style="color: #b30047;"></i>
+        </button>
+    </div>
+    <div id="favorites-container">
+        <ul id="favorites-list">
+            <!-- Favorite art pieces will be displayed here -->
+        </ul>
+    </div>
 
 
 </body>
