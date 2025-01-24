@@ -92,10 +92,12 @@ body {
     width: 80%;
     height: 200px;
     border: 1px solid black;
+    background-color: #0000006e;
     margin: 5px;
     border-radius: 15px;
     position: relative; 
     overflow: hidden; 
+    
 }
 
 #header {
@@ -120,50 +122,62 @@ input{
     border-radius: 15px;
 }
 
-#conjure-button{
+#conjure-button {
     display: flex;
     justify-content: center;
     margin: 10px;
-    font-size: 54px;
-    
+    font-size: 64px;
 }
-#conjure-button button{
+
+#conjure-button button {
     display: flex;
     justify-content: center;
     margin: 10px;
     font-size: 15px;
     transition: transform 0.3s ease;
-    
+    background: rgb(99,34,195);
+    background: linear-gradient(0deg, rgba(99,34,195,1) 0%, rgba(212,45,253,1) 100%);
+
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
 }
 
-#conjure-button button i{
+  #conjure-button button i {
     font-size: 15px;
+    transition: transform 0.3s ease;
     transition: color 0.3s ease-in-out;
+    color: white; /* Set the initial color */
+    font-size: 18px;
+    padding: 5px;
+}
+
+#conjure-button button:hover i {
+    color: #ffbf00; /* Turns the icon yellow when the button is hovered */
+    transition: transform 0.3s ease-in-out;
+
 }
 
 .gradient-hover-effect {
     display: flex;
     padding: 0.875em 2em;
-
-    background: linear-gradient(45deg, #000000, #b3dbd3, #000000);
-    
+    color: #ffbf00;
     font-family: inherit;
-    color: rgb(2,0,36);
     text-decoration: none;
     transition: background-color 1s;
     place-content: center;
     border-radius: 15px;
-    
-  }
+}
+
 .gradient-hover-effect:hover {
-    background: linear-gradient(270deg,#b3dbd3, #000000, #b3dbd3);
-    background-color: #ffffff;
-    color: #ffffff;
+    background-color: #ffbf00;
     transform: scale(1.08);
     transition: transform 0.3s ease-in-out;
-    
-  }
+}
 
+.gradient-hover-effect:hover i {
+    color: #ffbf00;
+}
 
 
 #search-bar-div {
@@ -192,7 +206,7 @@ input{
     min-width: auto; 
     color: white;
     background-color: rgba(0, 0, 0, 0.648);
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 5px;
     cursor: pointer;
     z-index: 100;
@@ -309,7 +323,10 @@ body.dark-mode {
     display: none;
 }
 
-/* FAVORITES */
+/** FAVORITES */
+
+
+
 #favorite-button {
     height: 30px;
     position: relative;
@@ -318,10 +335,19 @@ body.dark-mode {
     background: none;
 }
 
-#favorites-container{
-    
+
+#favorites-container {
+    width: 80%;
+    height: 200px;
+    border: none;
+    background-color: #0000006e;
+    margin: 5px;
+    border-radius: 15px;
+    position: relative; 
+    overflow: hidden; 
     margin-bottom: 50px;
     padding: 20px;
+    
 }
 
 #favorites-list{
@@ -332,12 +358,18 @@ body.dark-mode {
     
 }
 
+.favorite-item {
+    position: relative; /* Allow absolute positioning of the "X" */
+    margin: 5px;
+}
+
+
 #favorites-list img {
     width: 100px;
     height: 100px;
-    position: relative;
+    
     margin: 5px;
-    background-color: aqua;
+    
 }
 
 #favorites-header {
@@ -360,11 +392,15 @@ body.dark-mode {
 }
 
 
+
+
+
 /** heart animation :P */
 
 
 #favorite-button.favorites-page i {
     font-size: 24px; /* Adjust the size as needed */
+    
 }
 
 #favorite-button.favorites-page {
@@ -382,7 +418,7 @@ body.dark-mode {
 }
 
 #favorite-button.favorites-page:hover i {
-    color: #ff86b4 !important; /* Brighter heart color on hover */
+    color:  rgb(174, 38, 208) !important; /* Brighter heart color on hover */
 }
 
 @keyframes heartBeat {
