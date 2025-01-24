@@ -11,9 +11,10 @@ const artworkText = document.getElementById("artwork-text");
 const themeToggle = document.getElementById("theme-toggle");
 const body = document.body;
 searchSuggestions.style.display = "none";
+const savedTheme = localStorage.getItem("theme");
 
 
-
+//! DATA FETCHING
 async function fetchData() {
   const apiUrl = "https://api.artic.edu/api/v1/artworks";
   let artworks = []; //initializes an empty array
@@ -52,16 +53,17 @@ async function fetchData() {
 }
 console.log(fetchData());
 
+
+//! PERIOD FILTER CHANGE
 async function handleFilterChange() {
   if (cachedArtworks.length === 0) {
     cachedArtworks = await fetchData(); // fetch data only once
   }
+  let filteredArtworks = cachedArtworks;
 
   const movementSelect = document.getElementById("movement-select");
-
   const movementValue = movementSelect.value;
 
-  let filteredArtworks = cachedArtworks;
 
   //! MOVEMENT FILTER
   if (movementValue) {
@@ -84,6 +86,7 @@ async function handleFilterChange() {
   displayArtwork(randomArtwork);
 }
 
+//! NO RESULTS MESSAGE
 function displayNoResultsMessage() {
   const artContainer = document.getElementById("art-container");
   artContainer.innerHTML = "<p>No artworks found for the selected filters.</p>";
@@ -189,8 +192,6 @@ function renderSuggestions(results) {
   }
 }
 
-
-
 //!HANDLE ENTER KEY
 async function handleEnterKey(event) {
   if (event.key === "Enter") {
@@ -253,7 +254,7 @@ function renderArtworkDetail(artwork) {
 
 }
 
-
+//! DISPLAY ARTWORK
 function displayArtwork(artwork) {
 
   const artworkText = document.getElementById("artwork-text");
@@ -305,23 +306,15 @@ function displayArtwork(artwork) {
 
 }
 
-const savedTheme = localStorage.getItem("theme");
+//! THEME TOGGLE
 if (savedTheme) {
   body.classList.add(savedTheme);
   themeToggle.classList.add(savedTheme);
 }
 
-
-
-// Creating a Favorites list
-let favorites = [];
-
-//Click Event Listener for Favorites Button
+//!FAVORITE BUTTON FUNCTION
 const favButton = document.getElementById('favorite-button')
-const favoriteList = document.getElementById("favorites-list")
-
-//Click button being used for Favorites!
-//Adds and removes a favorite and limits to only 1
+let favorites = [];
 function favClick() {
   const image = document.querySelector("#artwork-text img")
     if (!favorites.includes(image.src)){
@@ -337,22 +330,6 @@ function favClick() {
     };
 }
 
-//Callback is a function passed as an argumnent to another function whose exicution will be delayed in time
-
-
-
-//!Tasks to acomplish: Stop code from duplicating images and be able to remove a favorite
-
-
-//Click Event Listener for Favorites Button
-
-
-
-//Click button being used for Favorites!
-
-
-
-
 //!EVENT LISTENERS
 favButton.addEventListener('click', favClick)
 
@@ -367,6 +344,7 @@ themeToggle.addEventListener("click", () => {
       localStorage.setItem("theme", "dark-mode");
   }
 });
+
 document.getElementById("conjure-button").addEventListener("click", handleFilterChange);
 document.getElementById("movement-select").addEventListener("change", handleFilterChange);
 
@@ -374,12 +352,13 @@ document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container") &&
       !event.target.closest(".search-right-filters") &&
       !event.target.closest("select")) {
-
  }
-
 });
+
 searchBar.addEventListener("input", handleSearch);
 searchBar.addEventListener("keydown", handleEnterKey);
 
+
+const favoriteList = document.getElementById("favorites-list")
 
 fetchData()
